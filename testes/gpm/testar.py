@@ -71,8 +71,8 @@ def db_snapshot():
     base = ROOT / 'var/lib/gpm/db'
     return {str(p.relative_to(base)): p.read_bytes() for p in base.rglob('*') if p.is_file()}
 
-def package(name='teste', mode='valid', dest='usr/share/teste/message.txt', manifest_name=None, depends='', conflicts=''):
-    manifest = f'Name = {manifest_name or name}\nVersion = 1.0\nRelease = 1\nArchitecture = x86_64\nDepends = {depends}\nProvides =\nConflicts = {conflicts}\nReplaces =\n'
+def package(name='teste', mode='valid', dest='usr/share/teste/message.txt', manifest_name=None, depends='', conflicts='', version='1.0', release='1'):
+    manifest = f'Name = {manifest_name or name}\nVersion = {version}\nRelease = {release}\nArchitecture = x86_64\nDepends = {depends}\nProvides =\nConflicts = {conflicts}\nReplaces =\n'
     raw = io.BytesIO()
     with tarfile.open(fileobj=raw, mode='w', format=tarfile.USTAR_FORMAT) as tar:
         def add(path, data=b'fixture\n', kind=tarfile.REGTYPE, target=''):
@@ -99,12 +99,12 @@ def package(name='teste', mode='valid', dest='usr/share/teste/message.txt', mani
         if mode == 'duplicate': add('payload/' + dest)
     data = gzip.compress(raw.getvalue(), mtime=0)
     if mode == 'truncated': data = data[:20]
-    filename = f'{name}-1.0-1-x86_64.gpm'
+    filename = f'{name}-{version}-{release}-x86_64.gpm'
     target = SERVER / 'packages' / filename
     target.parent.mkdir(exist_ok=True)
     target.write_bytes(data)
     digest = hashlib.sha256(data).hexdigest()
-    return f'{name}|1.0|1|x86_64|{filename}|{digest}|{depends}|{conflicts}|Pacote TESTE\n'
+    return f'{name}|{version}|{release}|x86_64|{filename}|{digest}|{depends}|{conflicts}|Pacote TESTE\n'
 
 try:
     run('--version', text='GPM 0.2')
@@ -293,6 +293,25 @@ try:
     run('install', 'clash')
     assert (ROOT / 'usr/share/clash/ok.txt').exists()
     run('remove', 'clash')
+    # Upgrade: versão nova substitui a antiga; instalação que falha restaura a anterior do cache.
+    INDEX.write_text(package('atual', dest='usr/share/atual/v1.txt'))
+    run('update')
+    run('install', 'atual')
+    INDEX.write_text(package('atual', version='2.0', dest='usr/share/atual/v2.txt'))
+    run('update')
+    run('upgrade')
+    assert not (ROOT / 'usr/share/atual/v1.txt').exists() and (ROOT / 'usr/share/atual/v2.txt').exists()
+    run('list', text='atual 2.0-1')
+    # Colisão com arquivo de outro pacote: a instalação da 3.0 falha e a 2.0 volta.
+    INDEX.write_text(package('dono', dest='usr/share/colisao/x') + package('atual', version='3.0', dest='usr/share/colisao/x'))
+    run('update')
+    run('install', 'dono')
+    snap = db_snapshot()
+    run('upgrade', ok=False, text='versão anterior restaurada')
+    assert (ROOT / 'usr/share/atual/v2.txt').exists() and (ROOT / 'usr/share/colisao/x').exists()
+    assert db_snapshot() == snap
+    run('list', text='atual 2.0-1')
+    assert not list((ROOT / 'var/lib/gpm/transactions').iterdir())
     for operation in ['install', 'remove']:
         run(operation, 'teste', ok=False, env=dict(ENV, GPM_TEST_UID='1000'), text='requer root')
     print(f'GPM_UNITARIOS_OK: {tests} verificações; artefatos em {AREA}')

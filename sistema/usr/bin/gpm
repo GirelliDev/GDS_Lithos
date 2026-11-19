@@ -26,6 +26,7 @@ ajuda() {
         '  info <pacote>          Mostra metadados e estado instalado' \
         '  list                   Lista pacotes instalados, offline' \
         '  install <pacote>       Instala um pacote exato (root)' \
+        '  upgrade                Atualiza pacotes instalados para versões mais novas (root)' \
         '  remove <pacote>        Remove somente arquivos próprios (root)' \
         '  --version              Mostra versão' '  --help                 Mostra esta ajuda'
 }
@@ -405,6 +406,12 @@ remove_pkg() {
         awk -F' = ' -v alvo="$name" '$1=="Depends" {n=split($2, a, ","); for (i=1; i<=n; i++) if (a[i]==alvo) achou=1} END {exit !achou}' "$dependente" || continue
         erro "pacote requerido por $dono; remova-o antes"
     done
+    remover_arquivos "$name"
+    printf '[GPM] Removido: %s\n' "$name"
+}
+# Remove os arquivos de um pacote instalado. Quem chama já tem o lock e checou dependentes.
+remover_arquivos() {
+    name=$1
     expected=$(awk -F' = ' '$1=="FilesSHA256" {print $2; n++} END {if(n!=1) exit 1}' "$DB/$name/desc") || erro 'desc corrompido'
     printf '%s\n' "$expected" | grep -Eq '^[a-f0-9]{64}$' || erro 'hash files inválido'
     printf '%s  %s\n' "$expected" "$DB/$name/files" | sha256sum --check --status || erro 'banco files corrompido'
@@ -417,12 +424,65 @@ remove_pkg() {
     : > "$TX/committed"
     sync -f "$STATE"
     reverter
-    printf '[GPM] Removido: %s\n' "$name"
+}
+# Linha do índice (9 campos + repo) reconstruída do registro instalado, para o rollback.
+linha_instalada() {
+    awk '
+    /^Name = /        { sub(/^Name = /, "");        nm = $0 }
+    /^Version = /     { sub(/^Version = /, "");     v = $0 }
+    /^Release = /     { sub(/^Release = /, "");     r = $0 }
+    /^Repository = /  { sub(/^Repository = /, "");  repo = $0 }
+    /^File = /        { sub(/^File = /, "");        f = $0 }
+    /^Depends = /     { sub(/^Depends = /, "");     d = $0 }
+    /^Conflicts = /   { sub(/^Conflicts = /, "");   c = $0 }
+    /^Description = / { sub(/^Description = /, "");  desc = $0 }
+    /^PackageSHA256 = / { sub(/^PackageSHA256 = /, ""); h = $0 }
+    END { print repo "|" nm "|" v "|" r "|x86_64|" f "|" h "|" d "|" c "|" desc }
+    ' "$DB/$1/desc"
+}
+# Verdadeiro se a versão $2 é mais nova que $1 (formato VERSAO-RELEASE, ordem natural do sort -V).
+versao_mais_nova() {
+    [ "$1" != "$2" ] && [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n 1)" = "$2" ]
+}
+# Troca um pacote instalado pela linha nova. Se a instalação falhar, restaura a versão anterior do cache.
+upgrade_um() {
+    antiga=$(linha_instalada "$1")
+    arquivo_antigo=$(printf '%s\n' "$antiga" | awk -F'|' '{print $6}')
+    hash_antigo=$(printf '%s\n' "$antiga" | awk -F'|' '{print $7}')
+    [ -n "$arquivo_antigo" ] && [ -f "$CACHE/$hash_antigo-$arquivo_antigo" ] ||
+        erro "versão anterior de $1 ausente no cache; upgrade cancelado"
+    remover_arquivos "$1"
+    # Subshell: se a instalação falhar, o erro sai só dela e a transação fica pendente para recuperar.
+    if ( instalar_linha "$2" ); then
+        printf '[GPM] Atualizado: %s\n' "$1"
+    else
+        recuperar
+        instalar_linha "$antiga" "$CACHE/$hash_antigo-$arquivo_antigo"
+        erro "upgrade de $1 falhou; versão anterior restaurada"
+    fi
+}
+upgrade() {
+    lock; data=$(indices) || erro 'não foi possível ler índices'
+    for desc in "$DB/"*/desc; do
+        [ -f "$desc" ] || continue
+        name=$(basename "$(dirname "$desc")")
+        atual=$(awk -F' = ' '$1=="Version" {v=$2} $1=="Release" {r=$2} END {print v "-" r}' "$desc")
+        novo=$(printf '%s\n' "$data" | awk -F'|' -v n="$name" '$2==n {print; c++} END {if (c!=1) exit 1}') || continue
+        nova=$(printf '%s\n' "$novo" | awk -F'|' '{print $3 "-" $4}')
+        versao_mais_nova "$atual" "$nova" || continue
+        # shortcut: upgrade não instala dependências novas; só adia. Upgrade completo precisa de plano().
+        pendente=$(printf '%s\n' "$novo" | awk -F'|' '{print $8}' | tr ',' ' ')
+        for dep in $pendente; do
+            [ -d "$DB/$dep" ] || { aviso "upgrade de $name adiado: dependência nova ausente: $dep"; continue 2; }
+        done
+        upgrade_um "$name" "$novo"
+    done
 }
 case "${1:-}" in
     --version|-V) [ "$#" -eq 1 ] || erro 'argumentos extras'; printf 'GPM 0.2\n' ;;
     --help|-h|'') ajuda ;;
     update) [ "$#" -eq 1 ] || erro 'uso: gpm update'; update ;;
+    upgrade) [ "$#" -eq 1 ] || erro 'uso: gpm upgrade'; upgrade ;;
     search|info|install|remove)
         [ "$#" -eq 2 ] && [ -n "$2" ] || erro "uso: gpm $1 <argumento>"
         case "$1" in search) search "$2";; info) info "$2";; install) install_pkg "$2";; remove) remove_pkg "$2";; esac ;;
