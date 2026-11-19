@@ -16,7 +16,7 @@ marcador="$MAQUINAS/.${VM_DISCO%.qcow2}-instalado"
 [[ -f "$disco" ]] || "$RAIZ/scripts/imagem.sh"
 qemu-img info --output=json "$disco" | grep -q '"format": "qcow2"' \
     || erro "o alvo não é uma imagem QCOW2"
-[[ "$(realpath -- "$disco")" == "$(realpath -m -- "$MAQUINAS/$VM_DISCO")" ]] \
+[[ "$(dirname -- "$(realpath -- "$disco")")" == "$(realpath -- "$MAQUINAS")" ]] \
     || erro "alvo fora do caminho permitido"
 
 "$RAIZ/scripts/preparar-instalador.sh"

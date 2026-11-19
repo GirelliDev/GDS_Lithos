@@ -1,0 +1,8 @@
+#!/bin/sh
+# Verifica a internet: primeiro o endpoint do Lithos; se nao responder, ping para 1.1.1.1.
+# Sai com 0 se houver internet e com 1 se nao houver.
+URL=${LITHOS_HEALTH_URL:-https://lithos.girelli.dev.br/health}
+
+curl --fail --silent --proto '=https' --tlsv1.2 --connect-timeout 5 --max-time 10 "$URL" 2>/dev/null | grep -qx ok && exit 0
+ping -c 1 -W 3 1.1.1.1 >/dev/null 2>&1 && exit 0
+exit 1

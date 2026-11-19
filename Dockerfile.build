@@ -1,0 +1,15 @@
+# Ambiente de build do Lithos. Pacotes iguais aos de scripts/dependencias.sh.
+# Uso: docker build -f Dockerfile.build -t lithos-build .
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential bc bison flex m4 perl gawk texinfo patch python3 pkg-config \
+        libelf-dev libssl-dev cpio curl xz-utils bzip2 qemu-system-x86 qemu-utils \
+        grub-efi-amd64-bin ovmf xorriso file rsync ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /lithos
+CMD ["./Lithos.sh", "ajuda"]

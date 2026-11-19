@@ -2,25 +2,25 @@
 set -eu
 export LC_ALL=C
 umask 022
-ROOT=${CPM_ROOT:-/}
+ROOT=${GPM_ROOT:-/}
 ROOT=${ROOT%/}
 [ -n "$ROOT" ] || ROOT=/
-CONF="${ROOT%/}/etc/cpm/repos.d"
-STATE="${ROOT%/}/var/lib/cpm"
-CACHE="${ROOT%/}/var/cache/cpm/packages"
+CONF="${ROOT%/}/etc/gpm/repos.d"
+STATE="${ROOT%/}/var/lib/gpm"
+CACHE="${ROOT%/}/var/cache/gpm/packages"
 DB="$STATE/db/installed"
 OWN="$STATE/db/ownership"
-HELPER=${CPM_ARCHIVER:-/usr/libexec/cpm/arquivo}
+HELPER=${GPM_ARCHIVER:-/usr/libexec/gpm/arquivo}
 TX=
 WORK=
 UPDATE_PENDING=
-erro() { printf '[CPM] ERRO: %s\n' "$*" >&2; exit 1; }
-aviso() { printf '[CPM] AVISO: %s\n' "$*" >&2; }
+erro() { printf '[GPM] ERRO: %s\n' "$*" >&2; exit 1; }
+aviso() { printf '[GPM] AVISO: %s\n' "$*" >&2; }
 nome_valido() { printf '%s\n' "$1" | grep -Eq '^[a-z0-9][a-z0-9+_.-]{0,127}$'; }
 root() { [ "$(id -u)" -eq 0 ] || erro 'este comando requer root'; }
 comandos() { for cmd in "$@"; do command -v "$cmd" >/dev/null 2>&1 || erro "comando ausente: $cmd"; done; }
 ajuda() {
-    printf '%s\n' 'Lithos Package Manager 0.2' 'Uso: cpm <comando>' \
+    printf '%s\n' 'Lithos Package Manager 0.2' 'Uso: gpm <comando>' \
         '  update                 Atualiza índices HTTPS (root)' \
         '  search <termo>         Pesquisa nome/descrição no banco local' \
         '  info <pacote>          Mostra metadados e estado instalado' \
@@ -38,16 +38,16 @@ diretorio() {
 lock() {
     root
     comandos flock mktemp curl openssl sha256sum awk grep sed stat realpath mkdir mv cp rm rmdir gzip xz bzip2 od cmp cat chmod tr uname sync wc
-    [ -x "$HELPER" ] || erro 'auxiliar CPM ausente'
-    [ "$(realpath "$ROOT")" = "$ROOT" ] || erro 'CPM_ROOT deve ser um diretório real canônico'
+    [ -x "$HELPER" ] || erro 'auxiliar GPM ausente'
+    [ "$(realpath "$ROOT")" = "$ROOT" ] || erro 'GPM_ROOT deve ser um diretório real canônico'
     "$HELPER" root "$ROOT"
     [ "$(uname -m)" = x86_64 ] || erro 'somente x86_64 é suportado'
     diretorio "$STATE" 755; diretorio "$STATE/db" 755; diretorio "$DB" 755
     diretorio "$STATE/repos" 755; diretorio "$STATE/transactions" 700; diretorio "$CACHE" 755
-    diretorio "${ROOT%/}/etc/cpm/keyrings" 755
+    diretorio "${ROOT%/}/etc/gpm/keyrings" 755
     [ ! -L "$STATE/lock" ] || erro 'lock é symlink'
     exec 9>>"$STATE/lock"
-    flock -n 9 || erro 'outra operação CPM está em andamento'
+    flock -n 9 || erro 'outra operação GPM está em andamento'
     [ ! -L "$OWN" ] || erro 'ownership é symlink'
     [ -f "$OWN" ] || : > "$OWN"
     trap 'exit 130' INT
@@ -120,7 +120,7 @@ recuperar() {
 }
 configuracao() {
     awk '
-    function bad(s) { print "[CPM] configuração inválida: " s > "/dev/stderr"; err=1; exit 1 }
+    function bad(s) { print "[GPM] configuração inválida: " s > "/dev/stderr"; err=1; exit 1 }
     function emit() {
       if (!name || enabled=="no") return
       if (!server || server !~ /^https:\/\/[A-Za-z0-9][A-Za-z0-9.:\/_$-]*$/) bad("Server HTTPS obrigatório")
@@ -162,11 +162,14 @@ validar_indice() {
     [ "$(wc -c < "$1")" -le 8388608 ] || erro 'índice excede 8 MiB'
     tr -d '\000' < "$1" | cmp - "$1" >/dev/null || erro 'índice contém NUL'
     awk -F'|' '
-    NF!=7 || $1 !~ /^[a-z0-9][a-z0-9+_.-]*$/ || length($1)>128 ||
+    NF!=9 || $1 !~ /^[a-z0-9][a-z0-9+_.-]*$/ || length($1)>128 ||
     $2 !~ /^[A-Za-z0-9][A-Za-z0-9+_.~-]*$/ || length($2)>128 ||
     $3 !~ /^[1-9][0-9]*$/ || length($3)>10 || $4!="x86_64" ||
-    $5 !~ /^[A-Za-z0-9][A-Za-z0-9+_.-]*\.cpm$/ || length($5)>200 ||
-    length($6)!=64 || $6 ~ /[^0-9a-f]/ || $7 ~ /[[:cntrl:]]/ || length($7)>1024 { bad=1 }
+    $5 !~ /^[A-Za-z0-9][A-Za-z0-9+_.-]*\.gpm$/ || length($5)>200 ||
+    length($6)!=64 || $6 ~ /[^0-9a-f]/ ||
+    $7 !~ /^([a-z0-9][a-z0-9+_.-]*(,[a-z0-9][a-z0-9+_.-]*)*)?$/ || length($7)>1024 ||
+    $8 !~ /^([a-z0-9][a-z0-9+_.-]*(,[a-z0-9][a-z0-9+_.-]*)*)?$/ || length($8)>1024 ||
+    $9 ~ /[[:cntrl:]]/ || length($9)>1024 { bad=1 }
     END { exit bad }
     ' "$1" || erro "índice inválido: $1"
 }
@@ -176,7 +179,7 @@ baixar() {
 }
 assinatura() {
     policy=$1 repo=$2 url=$3 objeto=$4 sigfile=$5
-    key="${ROOT%/}/etc/cpm/keyrings/$repo.pem"
+    key="${ROOT%/}/etc/gpm/keyrings/$repo.pem"
     status=$(curl --silent --show-error --location --proto '=https' --proto-redir '=https' \
         --tlsv1.2 --connect-timeout 10 --max-time 30 --max-filesize 65536 \
         --output "$sigfile" --write-out '%{http_code}' "$url.sig") || erro 'falha ao consultar assinatura'
@@ -224,7 +227,7 @@ update() {
     while IFS='|' read -r repo server policy; do
         [ -n "$repo" ] || continue
         mv "$STATE/repos/$repo/.index.$$" "$STATE/repos/$repo/index"
-        printf '[CPM] Índice atualizado: %s\n' "$repo"
+        printf '[GPM] Índice atualizado: %s\n' "$repo"
     done < "$WORK/repos"
     UPDATE_PENDING=
 }
@@ -233,7 +236,7 @@ indices() {
     while IFS='|' read -r repo server policy; do
         [ -n "$repo" ] || continue
         file="$STATE/repos/$repo/index"
-        [ -f "$file" ] && [ ! -L "$file" ] || erro "índice ausente ($repo); execute sudo cpm update"
+        [ -f "$file" ] && [ ! -L "$file" ] || erro "índice ausente ($repo); execute sudo gpm update"
         validar_indice "$file"
         awk -v repo="$repo" '{print repo "|" $0}' "$file"; found=1
     done <<EOF
@@ -248,11 +251,11 @@ candidato() {
 }
 search() {
     data=$(indices) || erro 'não foi possível ler índices'
-    printf '%s\n' "$data" | awk -F'|' -v q="$1" 'NF==8 && (index(tolower($2),tolower(q)) || index(tolower($8),tolower(q))) {print $2 " " $3 "-" $4 " [" $1 "] " $8}'
+    printf '%s\n' "$data" | awk -F'|' -v q="$1" 'NF==10 && (index(tolower($2),tolower(q)) || index(tolower($10),tolower(q))) {print $2 " " $3 "-" $4 " [" $1 "] " $10}'
 }
 info() {
     candidato "$1"
-    printf '%s\n' "$chosen" | awk -F'|' '{print "Name: " $2 "\nVersion: " $3 "\nRelease: " $4 "\nArchitecture: " $5 "\nRepository: " $1 "\nDescription: " $8}'
+    printf '%s\n' "$chosen" | awk -F'|' '{print "Name: " $2 "\nVersion: " $3 "\nRelease: " $4 "\nArchitecture: " $5 "\nRepository: " $1 "\nDepends: " $8 "\nConflicts: " $9 "\nDescription: " $10}'
     if [ -f "$DB/$1/desc" ]; then printf 'Installed: yes\n'; awk -F' = ' '/^(Version|Release) = / {print "Installed " $0}' "$DB/$1/desc"
     else printf 'Installed: no\n'; fi
 }
@@ -270,22 +273,61 @@ transacao() {
     cp "$OWN" "$TX/ownership.before"; : > "$TX/ready"
 }
 manifest() {
-    awk -v n="$name" -v v="$version" -v r="$release" '
+    awk -v n="$name" -v v="$version" -v r="$release" -v dep="$depends" -v con="$conflicts" '
     /^[ \t]*($|#)/ {next}
     {
       if ($0 ~ /[[:cntrl:]]/ || !index($0,"=")) {bad=1; next}
       k=substr($0,1,index($0,"=")-1); val=substr($0,index($0,"=")+1)
       sub(/^[ \t]+/,"",k); sub(/[ \t]+$/,"",k); sub(/^[ \t]+/,"",val); sub(/[ \t]+$/,"",val)
       if (seen[k]++ || k!~/^(Name|Version|Release|Architecture|Description|Depends|Provides|Conflicts|Replaces)$/) bad=1
-      field[k]=val; if (k~/^(Depends|Conflicts|Replaces)$/ && val!="") bad=1
+      field[k]=val; if (k=="Replaces" && val!="") bad=1
     }
-    END {if(bad || field["Name"]!=n || field["Version"]!=v || field["Release"]!=r || field["Architecture"]!="x86_64") exit 1}
-    ' "$1" || erro 'MANIFEST divergente/inválido ou Depends/Conflicts/Replaces ainda não suportados'
+    END {if(bad || field["Name"]!=n || field["Version"]!=v || field["Release"]!=r || field["Architecture"]!="x86_64" || field["Depends"]!=dep || field["Conflicts"]!=con) exit 1}
+    ' "$1" || erro 'MANIFEST divergente/inválido ou Replaces não suportado'
 }
-install_pkg() {
-    lock; candidato "$1"
-    IFS='|' read -r repo name version release arch file hash description <<EOF
-$chosen
+achar() {
+    printf '%s\n' "$data" | awk -F'|' -v n="$1" '$2==n {print; c++} END {if(c!=1) exit 1}'
+}
+# Depois de visitar as dependências, PLANO recebe o pacote: a ordem é de dependências primeiro.
+visitar() {
+    case "$VISITADOS" in *" $1 "*) return 0 ;; esac
+    VISITADOS="$VISITADOS$1 "
+    [ ! -d "$DB/$1" ] || return 0
+    linha=$(achar "$1") || erro "dependência ausente ou ambígua: $1"
+    deps=$(printf '%s\n' "$linha" | awk -F'|' '{print $8}')
+    for dep in $(printf '%s' "$deps" | tr ',' ' '); do visitar "$dep"; done
+    linha=$(achar "$1") || erro "dependência ausente ou ambígua: $1"
+    PLANO="$PLANO$linha
+"
+}
+# Valida o plano inteiro antes de baixar qualquer coisa: conflitos entre
+# planejados e instalados, em qualquer sentido, são recusados.
+plano() {
+    PLANO=
+    VISITADOS=' '
+    visitar "$1"
+    tabela=$({
+        printf '%s\n' "$PLANO" | awk -F'|' 'NF==10 {print $2 "|" $9}'
+        for desc in "$DB/"*/desc; do
+            [ -f "$desc" ] || continue
+            awk -F' = ' '$1=="Name" {n=$2} $1=="Conflicts" {c=$2} END {print n "|" c}' "$desc"
+        done
+    })
+    conflito=$(printf '%s\n' "$tabela" | awk -F'|' '
+        { presente[$1]=1; linha[NR]=$0 }
+        END {
+            for (i=1; i<=NR; i++) {
+                split(linha[i], f, "|"); total=split(f[2], c, ",")
+                for (j=1; j<=total; j++)
+                    if (c[j] != "" && c[j] != f[1] && (c[j] in presente)) { print f[1] " conflita com " c[j]; exit }
+            }
+        }')
+    [ -z "$conflito" ] || erro "conflito: $conflito"
+}
+instalar_linha() {
+    linha=$1
+    IFS='|' read -r repo name version release arch file hash depends conflicts description <<EOF
+$linha
 EOF
     [ ! -e "$DB/$name" ] && [ ! -L "$DB/$name" ] || erro 'pacote já instalado; upgrades não são suportados na v0.2'
     cfg=$(repos) || erro 'configuração inválida'
@@ -294,11 +336,11 @@ EOF
 $source
 EOF
     transacao "$name" install
-    baixar "${server%/}/packages/$file" "$STAGE/package.cpm"
-    assinatura "$policy" "$repo" "${server%/}/packages/$file" "$STAGE/package.cpm" "$STAGE/package.sig"
-    printf '%s  %s\n' "$hash" "$STAGE/package.cpm" | sha256sum --check --status || erro 'SHA-256 do pacote incorreto'
+    baixar "${server%/}/packages/$file" "$STAGE/package.gpm"
+    assinatura "$policy" "$repo" "${server%/}/packages/$file" "$STAGE/package.gpm" "$STAGE/package.sig"
+    printf '%s  %s\n' "$hash" "$STAGE/package.gpm" | sha256sum --check --status || erro 'SHA-256 do pacote incorreto'
     [ ! -L "$CACHE/$hash-$file" ] || erro 'cache é symlink'
-    mv "$STAGE/package.cpm" "$CACHE/$hash-$file"
+    mv "$STAGE/package.gpm" "$CACHE/$hash-$file"
     magic=$(od -An -tx1 -N6 "$CACHE/$hash-$file" | tr -d ' \n')
     (
         # Cap decompressed data before parsing, not after filling a filesystem.
@@ -307,19 +349,19 @@ EOF
             1f8b*) exec gzip -dc "$CACHE/$hash-$file" ;;
             fd377a585a00*) exec xz -dc "$CACHE/$hash-$file" ;;
             425a68*) exec bzip2 -dc "$CACHE/$hash-$file" ;;
-            *) erro 'compressão .cpm não suportada (gzip/xz/bzip2)' ;;
+            *) erro 'compressão .gpm não suportada (gzip/xz/bzip2)' ;;
         esac
     ) > "$STAGE/archive.tar" || erro 'descompressão falhou (archive truncado ou limite excedido)'
     mkdir -m 700 "$STAGE/tree"
     "$HELPER" unpack "$STAGE/archive.tar" "$STAGE/tree"
-    manifest "$STAGE/tree/CPM/MANIFEST"
+    manifest "$STAGE/tree/GPM/MANIFEST"
     "$HELPER" check "$ROOT" "$STAGE/tree/files" "$OWN" "$name" install
     "$HELPER" install "$ROOT" "$STAGE/tree" "$STAGE/tree/files" "$OWN" "$name" "$TX/journal"
     mkdir "$TX/record"
     awk -F'|' 'NR>1 {print $1 "|" $2 "|" $3 "|" $4}' "$TX/journal" > "$TX/record/files"
     fhash=$(sha256sum "$TX/record/files"); fhash=${fhash%% *}
-    printf 'Name = %s\nVersion = %s\nRelease = %s\nArchitecture = x86_64\nRepository = %s\nDescription = %s\nPackageSHA256 = %s\nFilesSHA256 = %s\n' \
-        "$name" "$version" "$release" "$repo" "$description" "$hash" "$fhash" > "$TX/record/desc"
+    printf 'Name = %s\nVersion = %s\nRelease = %s\nArchitecture = x86_64\nRepository = %s\nDepends = %s\nConflicts = %s\nDescription = %s\nPackageSHA256 = %s\nFilesSHA256 = %s\n' \
+        "$name" "$version" "$release" "$repo" "$depends" "$conflicts" "$description" "$hash" "$fhash" > "$TX/record/desc"
     cat "$OWN" > "$TX/ownership.after"
     awk -F'|' -v pkg="$name" '{print $2 "|" pkg}' "$TX/record/files" >> "$TX/ownership.after"
     chmod 644 "$TX/record/files" "$TX/record/desc" "$TX/ownership.after"
@@ -329,12 +371,35 @@ EOF
     : > "$TX/committed"
     sync -f "$STATE"
     reverter
-    printf '[CPM] Instalado: %s %s-%s\n' "$name" "$version" "$release"
+    printf '[GPM] Instalado: %s %s-%s\n' "$name" "$version" "$release"
+}
+install_pkg() {
+    lock; candidato "$1"
+    [ ! -e "$DB/$1" ] && [ ! -L "$DB/$1" ] || erro 'pacote já instalado; upgrades não são suportados na v0.2'
+    plano "$1"
+    # Dependências primeiro. Cada pacote é uma transação própria; se um falhar,
+    # os anteriores do plano permanecem instalados e a falha é reportada.
+    oldifs=$IFS; IFS='
+'; set -f
+    for linha in $PLANO; do
+        IFS=$oldifs; set +f
+        instalar_linha "$linha"
+        IFS='
+'; set -f
+    done
+    IFS=$oldifs; set +f
 }
 remove_pkg() {
     lock; name=$1; nome_valido "$name" || erro 'nome de pacote inválido'
     [ -d "$DB/$name" ] && [ ! -L "$DB/$name" ] || erro "pacote não instalado: $name"
     [ ! -L "$DB/$name/files" ] && [ ! -L "$DB/$name/desc" ] || erro 'registro instalado é symlink'
+    for dependente in "$DB/"*/desc; do
+        [ -f "$dependente" ] || continue
+        dono=$(basename "$(dirname "$dependente")")
+        [ "$dono" != "$name" ] || continue
+        awk -F' = ' -v alvo="$name" '$1=="Depends" {n=split($2, a, ","); for (i=1; i<=n; i++) if (a[i]==alvo) achou=1} END {exit !achou}' "$dependente" || continue
+        erro "pacote requerido por $dono; remova-o antes"
+    done
     expected=$(awk -F' = ' '$1=="FilesSHA256" {print $2; n++} END {if(n!=1) exit 1}' "$DB/$name/desc") || erro 'desc corrompido'
     printf '%s\n' "$expected" | grep -Eq '^[a-f0-9]{64}$' || erro 'hash files inválido'
     printf '%s  %s\n' "$expected" "$DB/$name/files" | sha256sum --check --status || erro 'banco files corrompido'
@@ -347,15 +412,15 @@ remove_pkg() {
     : > "$TX/committed"
     sync -f "$STATE"
     reverter
-    printf '[CPM] Removido: %s\n' "$name"
+    printf '[GPM] Removido: %s\n' "$name"
 }
 case "${1:-}" in
-    --version|-V) [ "$#" -eq 1 ] || erro 'argumentos extras'; printf 'CPM 0.2\n' ;;
+    --version|-V) [ "$#" -eq 1 ] || erro 'argumentos extras'; printf 'GPM 0.2\n' ;;
     --help|-h|'') ajuda ;;
-    update) [ "$#" -eq 1 ] || erro 'uso: cpm update'; update ;;
+    update) [ "$#" -eq 1 ] || erro 'uso: gpm update'; update ;;
     search|info|install|remove)
-        [ "$#" -eq 2 ] && [ -n "$2" ] || erro "uso: cpm $1 <argumento>"
+        [ "$#" -eq 2 ] && [ -n "$2" ] || erro "uso: gpm $1 <argumento>"
         case "$1" in search) search "$2";; info) info "$2";; install) install_pkg "$2";; remove) remove_pkg "$2";; esac ;;
-    list) [ "$#" -eq 1 ] || erro 'uso: cpm list'; list ;;
+    list) [ "$#" -eq 1 ] || erro 'uso: gpm list'; list ;;
     *) erro "comando desconhecido: $1 (consulte --help)" ;;
 esac

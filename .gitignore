@@ -34,9 +34,9 @@ fontes/clsupervisor/*.pre-*
 /imagens/
 /logs/
 
-# Código próprio do validador/transações CPM.
-!/fontes/cpm/
-!/fontes/cpm/*.c
+# Código próprio do validador/transações GPM.
+!/fontes/gpm/
+!/fontes/gpm/*.c
 # Lithos Control: código-fonte próprio.
 !/fontes/clcontrold/
 !/fontes/clcontrold/*.c

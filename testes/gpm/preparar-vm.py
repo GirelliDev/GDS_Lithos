@@ -9,19 +9,19 @@ import tarfile
 repo = Path(__file__).resolve().parents[2]
 out = Path(sys.argv[1]).resolve()
 out.mkdir(parents=True, exist_ok=True)
-manifest = b"Name=cpm-abi-test\nVersion=1.0\nRelease=1\nArchitecture=x86_64\n"
-with tarfile.open(out / "cpm-abi-test.cpm", "w:gz", format=tarfile.USTAR_FORMAT) as tar:
-    info = tarfile.TarInfo("CPM/MANIFEST")
+manifest = b"Name=gpm-abi-test\nVersion=1.0\nRelease=1\nArchitecture=x86_64\n"
+with tarfile.open(out / "gpm-abi-test.gpm", "w:gz", format=tarfile.USTAR_FORMAT) as tar:
+    info = tarfile.TarInfo("GPM/MANIFEST")
     info.mode = 0o644
     info.size = len(manifest)
     tar.addfile(info, io.BytesIO(manifest))
     binary = (repo / "compilacao/testes-base-abi/hello-Lithos-cpp").read_bytes()
-    info = tarfile.TarInfo("payload/usr/bin/hello-cpm")
+    info = tarfile.TarInfo("payload/usr/bin/hello-gpm")
     info.mode = 0o755
     info.size = len(binary)
     tar.addfile(info, io.BytesIO(binary))
-package = (out / "cpm-abi-test.cpm").read_bytes()
-(out / "index").write_text("cpm-abi-test|1.0|1|x86_64|cpm-abi-test.cpm|"
+package = (out / "gpm-abi-test.gpm").read_bytes()
+(out / "index").write_text("gpm-abi-test|1.0|1|x86_64|gpm-abi-test.gpm|"
                           + hashlib.sha256(package).hexdigest()
                           + "|Fixture dinamica Lithos Base ABI v1\n")
 # Esse double é explicitamente local; não representa transporte HTTPS real.
@@ -40,8 +40,8 @@ while [ "$#" -gt 0 ]; do
 done
 case "$url" in
     *.sig) : > "$out"; printf 404;;
-    */index) cp /tmp/cpm-fixtures/index "$out";;
-    */packages/cpm-abi-test.cpm) cp /tmp/cpm-fixtures/cpm-abi-test.cpm "$out";;
+    */index) cp /tmp/gpm-fixtures/index "$out";;
+    */packages/gpm-abi-test.gpm) cp /tmp/gpm-fixtures/gpm-abi-test.gpm "$out";;
     *) exit 1;;
 esac
 ''')

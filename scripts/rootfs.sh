@@ -76,7 +76,7 @@ done
 "$RAIZ/scripts/compilar-sudo.sh"
 "$RAIZ/scripts/compilar-curl.sh"
 "$RAIZ/scripts/compilar-base-abi.sh"
-"$RAIZ/scripts/compilar-cpm.sh"
+"$RAIZ/scripts/compilar-gpm.sh"
 
 # GNU userspace normal; BusyBox permanece disponível pelo binário explícito.
 rsync -a --exclude=.configuracao.sha256 "$COMPILACAO/base-abi-runtime/" "$rootfs.tmp/"
@@ -117,7 +117,7 @@ install -Dm0755 \
     "$COMPILACAO/curl/usr/bin/curl" \
     "$rootfs.tmp/usr/bin/curl"
 
-# Verificador criptográfico usado pela cadeia de confiança do CPM. É a CLI
+# Verificador criptográfico usado pela cadeia de confiança do GPM. É a CLI
 # estática do mesmo OpenSSL fixado usado pelo curl; não instala chave privada.
 install -Dm0755 \
     "$COMPILACAO/openssl/usr/bin/openssl" \
@@ -132,11 +132,11 @@ install -Dm0644 \
 chmod 0440 "$rootfs.tmp/etc/sudoers"
 chmod 0600 "$rootfs.tmp/etc/shadow"
 chmod 0644 "$rootfs.tmp/etc/passwd" "$rootfs.tmp/etc/group" \
-    "$rootfs.tmp/etc/cpm/repos.d/Lithos.repo"
-install -Dm0755 "$COMPILACAO/cpm/arquivo" "$rootfs.tmp/usr/libexec/cpm/arquivo"
-chmod 0755 "$rootfs.tmp/usr/bin/cpm"
-mkdir -p "$rootfs.tmp/etc/cpm/keyrings"
-chmod 0755 "$rootfs.tmp/etc/cpm" "$rootfs.tmp/etc/cpm/keyrings" "$rootfs.tmp/etc/cpm/repos.d"
+    "$rootfs.tmp/etc/gpm/repos.d/Lithos.repo"
+install -Dm0755 "$COMPILACAO/gpm/arquivo" "$rootfs.tmp/usr/libexec/gpm/arquivo"
+chmod 0755 "$rootfs.tmp/usr/bin/gpm"
+mkdir -p "$rootfs.tmp/etc/gpm/keyrings"
+chmod 0755 "$rootfs.tmp/etc/gpm" "$rootfs.tmp/etc/gpm/keyrings" "$rootfs.tmp/etc/gpm/repos.d"
 mkdir -p -- "$rootfs.tmp/var/lib/sudo" "$rootfs.tmp/var/log/sudo-io"
 chmod 0700 "$rootfs.tmp/var/lib/sudo" "$rootfs.tmp/var/log/sudo-io"
 mkdir -p -- "$rootfs.tmp/etc/Lithos" "$rootfs.tmp/usr/share/pixmaps"

@@ -1,0 +1,704 @@
+{
+  ".vscode/settings.json": {
+    "mtime": 1793753025.7551358,
+    "seen": 1795026120.9407687,
+    "ast_hash": "0ee7ad97cd0f67646b4ccbfdb85453e5",
+    "semantic_hash": "0ee7ad97cd0f67646b4ccbfdb85453e5"
+  },
+  "Lithos.sh": {
+    "mtime": 1793753025.7551358,
+    "seen": 1795026120.9407823,
+    "ast_hash": "c2a0e0d050c6aff0e4aeb0fd86be5ec6",
+    "semantic_hash": "c2a0e0d050c6aff0e4aeb0fd86be5ec6"
+  },
+  "fontes/clcontrol/clcontrol.c": {
+    "mtime": 1793753025.8859687,
+    "seen": 1795026120.9407873,
+    "ast_hash": "9e238f7431ac3f87e456b005d33e21bd",
+    "semantic_hash": "9e238f7431ac3f87e456b005d33e21bd"
+  },
+  "fontes/clcontrold/clcontrold.c": {
+    "mtime": 1793753025.8859687,
+    "seen": 1795026120.94079,
+    "ast_hash": "353f95f984bdf6b56b1bc541ebfd79d5",
+    "semantic_hash": "353f95f984bdf6b56b1bc541ebfd79d5"
+  },
+  "fontes/clsupervisor/supervisor.c": {
+    "mtime": 1793753025.890478,
+    "seen": 1795026120.9407926,
+    "ast_hash": "148ed6f77ad7fe242b5005d8c5faf92a",
+    "semantic_hash": "148ed6f77ad7fe242b5005d8c5faf92a"
+  },
+  "fontes/cpm/arquivo.c": {
+    "mtime": 1793753025.8924918,
+    "seen": 1795026120.940795,
+    "ast_hash": "42ee0206de7da83d0bfab473d8a157c4",
+    "semantic_hash": "42ee0206de7da83d0bfab473d8a157c4"
+  },
+  "nt/include/nt/object.h": {
+    "mtime": 1793753025.8965204,
+    "seen": 1795026120.9407978,
+    "ast_hash": "e036c56b089520c640cd4cfb538ca58c",
+    "semantic_hash": "e036c56b089520c640cd4cfb538ca58c"
+  },
+  "nt/include/nt/status.h": {
+    "mtime": 1793753025.898276,
+    "seen": 1795026120.9408,
+    "ast_hash": "fcb119de30b84e3f984f841bf3ad1e70",
+    "semantic_hash": "fcb119de30b84e3f984f841bf3ad1e70"
+  },
+  "nt/include/nt/types.h": {
+    "mtime": 1793753025.898276,
+    "seen": 1795026120.9408023,
+    "ast_hash": "613a2ea64b0741ca75e6e29ddff45fd1",
+    "semantic_hash": "613a2ea64b0741ca75e6e29ddff45fd1"
+  },
+  "nt/src/ob_core.c": {
+    "mtime": 1793753025.9002905,
+    "seen": 1795026120.9408047,
+    "ast_hash": "8c5db1e2c19f834f9599dedd175b2948",
+    "semantic_hash": "8c5db1e2c19f834f9599dedd175b2948"
+  },
+  "nt/src/ob_handle.c": {
+    "mtime": 1793753025.9002905,
+    "seen": 1795026120.940807,
+    "ast_hash": "54108b72d2ee7129c874caf962132533",
+    "semantic_hash": "54108b72d2ee7129c874caf962132533"
+  },
+  "nt/src/ob_internal.h": {
+    "mtime": 1793753025.9002905,
+    "seen": 1795026120.9408097,
+    "ast_hash": "585af8e11feb3120869c8f3f3a5efd86",
+    "semantic_hash": "585af8e11feb3120869c8f3f3a5efd86"
+  },
+  "nt/src/ob_namespace.c": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408119,
+    "ast_hash": "000ad82b6b5424cec88b338051365fcd",
+    "semantic_hash": "000ad82b6b5424cec88b338051365fcd"
+  },
+  "nt/src/ob_types.c": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.940814,
+    "ast_hash": "71fdce78d945693859f8925fdc6eee93",
+    "semantic_hash": "71fdce78d945693859f8925fdc6eee93"
+  },
+  "nt/tests/test_main.c": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408164,
+    "ast_hash": "4df7c15f40a9b11653187ca62c3d83f0",
+    "semantic_hash": "4df7c15f40a9b11653187ca62c3d83f0"
+  },
+  "scripts/atualizar-identidade.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408185,
+    "ast_hash": "15ec034070e72c14277e6aa1d1972802",
+    "semantic_hash": "15ec034070e72c14277e6aa1d1972802"
+  },
+  "scripts/auditar-elf.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408205,
+    "ast_hash": "a6d8f92c31b09d881b67bb619f34696f",
+    "semantic_hash": "a6d8f92c31b09d881b67bb619f34696f"
+  },
+  "scripts/auditar-seguranca.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408226,
+    "ast_hash": "925842d93038cc8e4df171f18060bc28",
+    "semantic_hash": "925842d93038cc8e4df171f18060bc28"
+  },
+  "scripts/biblioteca.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.9408245,
+    "ast_hash": "acd4ab8a031fb0b4b59ee5875fb432ab",
+    "semantic_hash": "acd4ab8a031fb0b4b59ee5875fb432ab"
+  },
+  "scripts/compilar-base-abi.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.940827,
+    "ast_hash": "eb3f97fbcffe205ff2fffb8af7434b47",
+    "semantic_hash": "eb3f97fbcffe205ff2fffb8af7434b47"
+  },
+  "scripts/compilar-bash.sh": {
+    "mtime": 1793753025.9032574,
+    "seen": 1795026120.940829,
+    "ast_hash": "37f2511e9b307053289895fd080e5e5f",
+    "semantic_hash": "37f2511e9b307053289895fd080e5e5f"
+  },
+  "scripts/compilar-clcontrol.sh": {
+    "mtime": 1793753025.911333,
+    "seen": 1795026120.940831,
+    "ast_hash": "b8af2a0e9ce8d0d58914c92d7df7bf4e",
+    "semantic_hash": "b8af2a0e9ce8d0d58914c92d7df7bf4e"
+  },
+  "scripts/compilar-controle.sh": {
+    "mtime": 1793753025.911333,
+    "seen": 1795026120.9408343,
+    "ast_hash": "1aa31d0496f31c62cdeedb41cf079f39",
+    "semantic_hash": "1aa31d0496f31c62cdeedb41cf079f39"
+  },
+  "scripts/compilar-cpm.sh": {
+    "mtime": 1793753025.911333,
+    "seen": 1795026120.9408364,
+    "ast_hash": "3289024a16c39d9a1d7b6387eadd07ff",
+    "semantic_hash": "3289024a16c39d9a1d7b6387eadd07ff"
+  },
+  "scripts/compilar-curl.sh": {
+    "mtime": 1793753025.9133527,
+    "seen": 1795026120.9408386,
+    "ast_hash": "64665c72c17c979bad92e1338fdb3955",
+    "semantic_hash": "64665c72c17c979bad92e1338fdb3955"
+  },
+  "scripts/compilar-openssl.sh": {
+    "mtime": 1793753025.9143696,
+    "seen": 1795026120.9408407,
+    "ast_hash": "901147f5a946e5b35fb46d25a6892fc3",
+    "semantic_hash": "901147f5a946e5b35fb46d25a6892fc3"
+  },
+  "scripts/compilar-sudo.sh": {
+    "mtime": 1793753025.9143696,
+    "seen": 1795026120.9408429,
+    "ast_hash": "cb6343cfe5a2afe3e9bde2657b7a1887",
+    "semantic_hash": "cb6343cfe5a2afe3e9bde2657b7a1887"
+  },
+  "scripts/compilar-supervisor.sh": {
+    "mtime": 1793753025.9143696,
+    "seen": 1795026120.9408448,
+    "ast_hash": "c62695c70a7009a7d8ebb492d0493c0e",
+    "semantic_hash": "c62695c70a7009a7d8ebb492d0493c0e"
+  },
+  "scripts/compilar-toolchain.sh": {
+    "mtime": 1793753025.916391,
+    "seen": 1795026120.940847,
+    "ast_hash": "c7525bd4e0943ab88033b9f4d9efa2cb",
+    "semantic_hash": "c7525bd4e0943ab88033b9f4d9efa2cb"
+  },
+  "scripts/dependencias.sh": {
+    "mtime": 1793753025.9179268,
+    "seen": 1795026120.9408488,
+    "ast_hash": "7a897009af2d4da2e696de88b0c46050",
+    "semantic_hash": "7a897009af2d4da2e696de88b0c46050"
+  },
+  "scripts/ferramentas-instalador.sh": {
+    "mtime": 1793753025.9179268,
+    "seen": 1795026120.940851,
+    "ast_hash": "a81855069731dd2567059e6a3e4fbb91",
+    "semantic_hash": "a81855069731dd2567059e6a3e4fbb91"
+  },
+  "scripts/imagem.sh": {
+    "mtime": 1793753025.9199588,
+    "seen": 1795026120.9408529,
+    "ast_hash": "59f57b93c14f52ec6989eed4ff351602",
+    "semantic_hash": "59f57b93c14f52ec6989eed4ff351602"
+  },
+  "scripts/initramfs.sh": {
+    "mtime": 1793753025.9199588,
+    "seen": 1795026120.940855,
+    "ast_hash": "3fc651a79b29ec23c5031452caec9158",
+    "semantic_hash": "3fc651a79b29ec23c5031452caec9158"
+  },
+  "scripts/inspecionar-disco.sh": {
+    "mtime": 1793753025.9219725,
+    "seen": 1795026120.9408572,
+    "ast_hash": "7c68f0a019fad43fcb8079bc6a33f389",
+    "semantic_hash": "7c68f0a019fad43fcb8079bc6a33f389"
+  },
+  "scripts/instalar-sentinel.sh": {
+    "mtime": 1793753025.9219725,
+    "seen": 1795026120.9408588,
+    "ast_hash": "c5c169ca2116a94198e60004d3351b6c",
+    "semantic_hash": "c5c169ca2116a94198e60004d3351b6c"
+  },
+  "scripts/instalar.sh": {
+    "mtime": 1793753025.9244866,
+    "seen": 1795026120.940861,
+    "ast_hash": "c0524275e52048e76136cd5bb3d7fa41",
+    "semantic_hash": "c0524275e52048e76136cd5bb3d7fa41"
+  },
+  "scripts/kernel.sh": {
+    "mtime": 1793753025.9251256,
+    "seen": 1795026120.9408627,
+    "ast_hash": "9b631433dc45c25b8719e33f662e681e",
+    "semantic_hash": "9b631433dc45c25b8719e33f662e681e"
+  },
+  "scripts/limpar.sh": {
+    "mtime": 1793753025.9251256,
+    "seen": 1795026120.940865,
+    "ast_hash": "f41d08c5034a84cee88bfe82e32a96c1",
+    "semantic_hash": "f41d08c5034a84cee88bfe82e32a96c1"
+  },
+  "scripts/preparar-atualizacao-identidade.sh": {
+    "mtime": 1793753025.9271398,
+    "seen": 1795026120.9408667,
+    "ast_hash": "eb8e4d59fbd0b5b2ec66e0f2c8d3d533",
+    "semantic_hash": "eb8e4d59fbd0b5b2ec66e0f2c8d3d533"
+  },
+  "scripts/preparar-atualizacao-infraestrutura.sh": {
+    "mtime": 1793753025.9271398,
+    "seen": 1795026120.9408686,
+    "ast_hash": "6cfc432094d056937395835c862d2263",
+    "semantic_hash": "6cfc432094d056937395835c862d2263"
+  },
+  "scripts/preparar-atualizacao-sentinel.sh": {
+    "mtime": 1793753025.9271398,
+    "seen": 1795026120.9408708,
+    "ast_hash": "963867d8a2c1a303f11090a1335ef631",
+    "semantic_hash": "963867d8a2c1a303f11090a1335ef631"
+  },
+  "scripts/preparar-emergencia.sh": {
+    "mtime": 1793753025.9271398,
+    "seen": 1795026120.9408727,
+    "ast_hash": "a51898893a38d8cfe9b62f5e9b95d488",
+    "semantic_hash": "a51898893a38d8cfe9b62f5e9b95d488"
+  },
+  "scripts/preparar-inspecao.sh": {
+    "mtime": 1793753025.9304981,
+    "seen": 1795026120.940875,
+    "ast_hash": "bf2e2ab4a3fcb40d7720b94297e3841d",
+    "semantic_hash": "bf2e2ab4a3fcb40d7720b94297e3841d"
+  },
+  "scripts/preparar-instalador.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.940878,
+    "ast_hash": "acfba90c75520505716c66e053fc9afb",
+    "semantic_hash": "acfba90c75520505716c66e053fc9afb"
+  },
+  "scripts/preparar-uefi.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408798,
+    "ast_hash": "d6e59d05f5410dc82870d7c43f6c0608",
+    "semantic_hash": "d6e59d05f5410dc82870d7c43f6c0608"
+  },
+  "scripts/rootfs.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.940882,
+    "ast_hash": "a78b9cae799aa4cb185ca397cfa52b15",
+    "semantic_hash": "a78b9cae799aa4cb185ca397cfa52b15"
+  },
+  "scripts/testar-atualizacao-infraestrutura.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408839,
+    "ast_hash": "a9a38c601c996d18234b241344e4306d",
+    "semantic_hash": "a9a38c601c996d18234b241344e4306d"
+  },
+  "scripts/testar-auditoria-abi.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.940886,
+    "ast_hash": "5602e4e6d1ff67420a09811e80b247bc",
+    "semantic_hash": "5602e4e6d1ff67420a09811e80b247bc"
+  },
+  "scripts/testar-base-abi.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408877,
+    "ast_hash": "00267a616e6a7e17cdd683d22f92c2f3",
+    "semantic_hash": "00267a616e6a7e17cdd683d22f92c2f3"
+  },
+  "scripts/testar-cpm.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408896,
+    "ast_hash": "8a26d8925974a223ed448c638d3768f9",
+    "semantic_hash": "8a26d8925974a223ed448c638d3768f9"
+  },
+  "scripts/testar-persistencia.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408917,
+    "ast_hash": "df9b5ad1657805b7c3330223e80c714b",
+    "semantic_hash": "df9b5ad1657805b7c3330223e80c714b"
+  },
+  "scripts/testar-seguranca.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408934,
+    "ast_hash": "002c35b6276401e5ee5177677ca20411",
+    "semantic_hash": "002c35b6276401e5ee5177677ca20411"
+  },
+  "scripts/verificar.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408956,
+    "ast_hash": "cf00c01e2332ddb05b145336c6ccc3ab",
+    "semantic_hash": "cf00c01e2332ddb05b145336c6ccc3ab"
+  },
+  "scripts/vm.sh": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408972,
+    "ast_hash": "a3befa5ff2519919712fcb22858954ad",
+    "semantic_hash": "a3befa5ff2519919712fcb22858954ad"
+  },
+  "sistema-atualizador/infraestrutura-init": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9408994,
+    "ast_hash": "b46ff484986c3c012b9fd68d1643edf4",
+    "semantic_hash": "b46ff484986c3c012b9fd68d1643edf4"
+  },
+  "sistema-atualizador/init": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9409013,
+    "ast_hash": "b4d8e49e54eea3f2821fd603d314ecc3",
+    "semantic_hash": "b4d8e49e54eea3f2821fd603d314ecc3"
+  },
+  "sistema-atualizador/sentinel/init": {
+    "mtime": 1793753025.931077,
+    "seen": 1795026120.9409034,
+    "ast_hash": "44e3fd18233ec466559ac55fdcd9c986",
+    "semantic_hash": "44e3fd18233ec466559ac55fdcd9c986"
+  },
+  "sistema-boot/init": {
+    "mtime": 1793753025.942082,
+    "seen": 1795026120.9409056,
+    "ast_hash": "efea9808f8cec9e8749ac2bc49c5f28c",
+    "semantic_hash": "efea9808f8cec9e8749ac2bc49c5f28c"
+  },
+  "sistema-emergencia/init": {
+    "mtime": 1793753025.942082,
+    "seen": 1795026120.9409072,
+    "ast_hash": "b378090e52dcea8a1be7f9a9702507af",
+    "semantic_hash": "b378090e52dcea8a1be7f9a9702507af"
+  },
+  "sistema-instalador/init": {
+    "mtime": 1793753025.9465547,
+    "seen": 1795026120.9409094,
+    "ast_hash": "a4828bdf12cb4e0630519dc1b87ed577",
+    "semantic_hash": "a4828bdf12cb4e0630519dc1b87ed577"
+  },
+  "sistema/etc/Lithos/encerramento.sh": {
+    "mtime": 1793753025.9496028,
+    "seen": 1795026120.9409113,
+    "ast_hash": "96c6d6a8accdb4b6a4b6ef2e2e4e79a6",
+    "semantic_hash": "96c6d6a8accdb4b6a4b6ef2e2e4e79a6"
+  },
+  "sistema/etc/Lithos/inicializacao.sh": {
+    "mtime": 1793753025.9496028,
+    "seen": 1795026120.9409134,
+    "ast_hash": "95112f4c380254f1097600850ce78336",
+    "semantic_hash": "95112f4c380254f1097600850ce78336"
+  },
+  "sistema/etc/Lithos/servicos/01-diretorios": {
+    "mtime": 1793753025.9560795,
+    "seen": 1795026120.940915,
+    "ast_hash": "ff5e3d7e4a958d8b34f3f60dc8a1fab0",
+    "semantic_hash": "ff5e3d7e4a958d8b34f3f60dc8a1fab0"
+  },
+  "sistema/init": {
+    "mtime": 1793753025.9632816,
+    "seen": 1795026120.940917,
+    "ast_hash": "76bdbd65f49601e59ddb3a0e9510a6fc",
+    "semantic_hash": "76bdbd65f49601e59ddb3a0e9510a6fc"
+  },
+  "sistema/usr/bin/clservice": {
+    "mtime": 1793753025.9632816,
+    "seen": 1795026120.9409194,
+    "ast_hash": "054703e5cfe207e0c165f4b27a1c7259",
+    "semantic_hash": "054703e5cfe207e0c165f4b27a1c7259"
+  },
+  "sistema/usr/bin/cpm": {
+    "mtime": 1793753025.9632816,
+    "seen": 1795026120.9409213,
+    "ast_hash": "6095359d50fb1396e38056bca95dbdce",
+    "semantic_hash": "6095359d50fb1396e38056bca95dbdce"
+  },
+  "sistema/usr/lib/Lithos/banner": {
+    "mtime": 1793753025.9632816,
+    "seen": 1795026120.9409235,
+    "ast_hash": "f165c97f8ac6144d1244a88a7e25379f",
+    "semantic_hash": "f165c97f8ac6144d1244a88a7e25379f"
+  },
+  "sistema/usr/lib/Lithos/rede/dhcp": {
+    "mtime": 1793753025.9632816,
+    "seen": 1795026120.9409254,
+    "ast_hash": "3718aa578eef0c253cff73ef4cb847f7",
+    "semantic_hash": "3718aa578eef0c253cff73ef4cb847f7"
+  },
+  "sistema/usr/lib/Lithos/rede/iniciar": {
+    "mtime": 1793753025.9789546,
+    "seen": 1795026120.9409275,
+    "ast_hash": "2e698725ae68ff7a8ebcd4fdacb7c395",
+    "semantic_hash": "2e698725ae68ff7a8ebcd4fdacb7c395"
+  },
+  "sistema/usr/lib/Lithos/registro.sh": {
+    "mtime": 1793753025.9789546,
+    "seen": 1795026120.9409292,
+    "ast_hash": "04aff2344ce0b2bbf7e84d5a9c634b23",
+    "semantic_hash": "04aff2344ce0b2bbf7e84d5a9c634b23"
+  },
+  "sistema/usr/lib/Lithos/solicitar-encerramento": {
+    "mtime": 1793753025.9789546,
+    "seen": 1795026120.9409313,
+    "ast_hash": "44788eabf08bf0de69aab3f02227d993",
+    "semantic_hash": "44788eabf08bf0de69aab3f02227d993"
+  },
+  "sistema/usr/sbin/service": {
+    "mtime": 1793753025.9828494,
+    "seen": 1795026120.9409335,
+    "ast_hash": "37edad80bf87ca62aadce9dbf6192dc4",
+    "semantic_hash": "37edad80bf87ca62aadce9dbf6192dc4"
+  },
+  "testes/base-abi/hello-Lithos-cpp.cc": {
+    "mtime": 1793753025.9842212,
+    "seen": 1795026120.9409354,
+    "ast_hash": "2b997a51daeb71603b789256489249e3",
+    "semantic_hash": "2b997a51daeb71603b789256489249e3"
+  },
+  "testes/base-abi/hello-Lithos.c": {
+    "mtime": 1793753025.9847682,
+    "seen": 1795026120.9409375,
+    "ast_hash": "97ab61f5a849720b3f10b79fb3d7c01d",
+    "semantic_hash": "97ab61f5a849720b3f10b79fb3d7c01d"
+  },
+  "testes/base-abi/verificar-sistema.sh": {
+    "mtime": 1793753025.9847682,
+    "seen": 1795026120.9409392,
+    "ast_hash": "04a450efdd3f3ae496fc2f51f0dd78c8",
+    "semantic_hash": "04a450efdd3f3ae496fc2f51f0dd78c8"
+  },
+  "testes/cpm/mock-curl.py": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.9409413,
+    "ast_hash": "f8b206985f089ebe93e65fffcbcfdfc6",
+    "semantic_hash": "f8b206985f089ebe93e65fffcbcfdfc6"
+  },
+  "testes/cpm/mock-id.sh": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.940943,
+    "ast_hash": "474a70fcd3795e61f6e063c83709c1ad",
+    "semantic_hash": "474a70fcd3795e61f6e063c83709c1ad"
+  },
+  "testes/cpm/mock-mv.sh": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.9409451,
+    "ast_hash": "c0d01341fd208f4b8108adc7b9b3ce2e",
+    "semantic_hash": "c0d01341fd208f4b8108adc7b9b3ce2e"
+  },
+  "testes/cpm/mock-stat.sh": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.9409475,
+    "ast_hash": "dc4aa85de61da3a317773c3228636e4b",
+    "semantic_hash": "dc4aa85de61da3a317773c3228636e4b"
+  },
+  "testes/cpm/preparar-vm.py": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.9409494,
+    "ast_hash": "e5f4e01065b43203c7028cf5ba997606",
+    "semantic_hash": "e5f4e01065b43203c7028cf5ba997606"
+  },
+  "testes/cpm/testar.py": {
+    "mtime": 1793753025.9871206,
+    "seen": 1795026120.9409516,
+    "ast_hash": "db2b611049c58e193fe1f767964cfb66",
+    "semantic_hash": "db2b611049c58e193fe1f767964cfb66"
+  },
+  "testes/cpm/verificar-vm.sh": {
+    "mtime": 1793753025.9924123,
+    "seen": 1795026120.9409535,
+    "ast_hash": "fceccc691fb24ac8c647ff3a969d4e1d",
+    "semantic_hash": "fceccc691fb24ac8c647ff3a969d4e1d"
+  },
+  "testes/sentinel/testar-descendentes.sh": {
+    "mtime": 1793753025.9924123,
+    "seen": 1795026120.9409554,
+    "ast_hash": "c9ab5f50ff77c0a58a63071e5c29d857",
+    "semantic_hash": "c9ab5f50ff77c0a58a63071e5c29d857"
+  },
+  "testes/sentinel/testar-ordem-servicos.sh": {
+    "mtime": 1793753025.9924123,
+    "seen": 1795026120.9409575,
+    "ast_hash": "f00fa1e6b1033f72d01665aa42f344fa",
+    "semantic_hash": "f00fa1e6b1033f72d01665aa42f344fa"
+  },
+  "testes/sentinel/testar-saida-prematura.sh": {
+    "mtime": 1793753025.9950476,
+    "seen": 1795026120.9409592,
+    "ast_hash": "722c44e3c1c88054579d63815ef94e1c",
+    "semantic_hash": "722c44e3c1c88054579d63815ef94e1c"
+  },
+  "testes/sentinel/testar-supervisor.sh": {
+    "mtime": 1793753025.9950476,
+    "seen": 1795026120.9409614,
+    "ast_hash": "f93f33d3dc09f95b92483e2d06e8a468",
+    "semantic_hash": "f93f33d3dc09f95b92483e2d06e8a468"
+  },
+  "README.md": {
+    "mtime": 1793753025.7551358,
+    "seen": 1795026120.940965,
+    "ast_hash": "7b7a0c79f6d87275446516458660e5f8",
+    "semantic_hash": "7b7a0c79f6d87275446516458660e5f8"
+  },
+  "branding/system/ascii.txt": {
+    "mtime": 1793753025.8661711,
+    "seen": 1795026120.9409668,
+    "ast_hash": "70042cff4074167bb84731c858187804",
+    "semantic_hash": "70042cff4074167bb84731c858187804"
+  },
+  "documentacao/base-abi-v1.md": {
+    "mtime": 1793753025.87544,
+    "seen": 1795026120.9409688,
+    "ast_hash": "f00792adb5d268b0642dde82dad278db",
+    "semantic_hash": "f00792adb5d268b0642dde82dad278db"
+  },
+  "documentacao/cpm.md": {
+    "mtime": 1793753025.8774526,
+    "seen": 1795026120.9409707,
+    "ast_hash": "578a9a5d7642de3a14c5e59778a501ea",
+    "semantic_hash": "578a9a5d7642de3a14c5e59778a501ea"
+  },
+  "documentacao/fase1.md": {
+    "mtime": 1793753025.8774526,
+    "seen": 1795026120.940973,
+    "ast_hash": "633b8ec0aab586ae30d5953431e09dfc",
+    "semantic_hash": "633b8ec0aab586ae30d5953431e09dfc"
+  },
+  "documentacao/identidade.md": {
+    "mtime": 1793753025.8774526,
+    "seen": 1795026120.9409752,
+    "ast_hash": "8470995bf41430530cadd2b8bd8790e7",
+    "semantic_hash": "8470995bf41430530cadd2b8bd8790e7"
+  },
+  "documentacao/sistema-persistente.md": {
+    "mtime": 1793753025.8774526,
+    "seen": 1795026120.9409769,
+    "ast_hash": "01b32e618aa75ecb9589cdbf5571e6f7",
+    "semantic_hash": "01b32e618aa75ecb9589cdbf5571e6f7"
+  },
+  "documentacao/toolchain.md": {
+    "mtime": 1793753025.8822238,
+    "seen": 1795026120.940979,
+    "ast_hash": "76df65486bb0abdaf81ea1918c61ec5e",
+    "semantic_hash": "76df65486bb0abdaf81ea1918c61ec5e"
+  },
+  "documentacao/validacao-base-abi-v1.md": {
+    "mtime": 1793753025.8822238,
+    "seen": 1795026120.9409811,
+    "ast_hash": "a979a87612a6d84feff74512437b40ad",
+    "semantic_hash": "a979a87612a6d84feff74512437b40ad"
+  },
+  "documentacao/validacao-cpm-v0.2.md": {
+    "mtime": 1793753025.8822238,
+    "seen": 1795026120.9409833,
+    "ast_hash": "602fe19c9701d41809f8c8dc9f6028a7",
+    "semantic_hash": "602fe19c9701d41809f8c8dc9f6028a7"
+  },
+  "fontes/clsupervisor/README.md": {
+    "mtime": 1793753025.8859687,
+    "seen": 1795026120.9409854,
+    "ast_hash": "340c4b43cf7a11f8bc71f86456195e81",
+    "semantic_hash": "340c4b43cf7a11f8bc71f86456195e81"
+  },
+  "branding/calamares/01.png": {
+    "mtime": 1793753025.7621055,
+    "seen": 1795026120.9409873,
+    "ast_hash": "ff015e0cb6efaee9940f31b2da74291a",
+    "semantic_hash": "ff015e0cb6efaee9940f31b2da74291a"
+  },
+  "branding/calamares/02.png": {
+    "mtime": 1793753025.7725327,
+    "seen": 1795026120.9409895,
+    "ast_hash": "6f1ce7310bbaede23b7afb073d8a6a47",
+    "semantic_hash": "6f1ce7310bbaede23b7afb073d8a6a47"
+  },
+  "branding/calamares/03.png": {
+    "mtime": 1793753025.774335,
+    "seen": 1795026120.9409914,
+    "ast_hash": "9c4fb649177015dbbbaf6e596bd15f31",
+    "semantic_hash": "9c4fb649177015dbbbaf6e596bd15f31"
+  },
+  "branding/calamares/04.png": {
+    "mtime": 1793753025.7818558,
+    "seen": 1795026120.9409938,
+    "ast_hash": "8f1d80421e851df38eba613d29f017b4",
+    "semantic_hash": "8f1d80421e851df38eba613d29f017b4"
+  },
+  "branding/calamares/05.png": {
+    "mtime": 1793753025.791605,
+    "seen": 1795026120.940996,
+    "ast_hash": "8c479c868cf5faf14bd4693118a1ca22",
+    "semantic_hash": "8c479c868cf5faf14bd4693118a1ca22"
+  },
+  "branding/calamares/06.png": {
+    "mtime": 1793753025.791605,
+    "seen": 1795026120.9409978,
+    "ast_hash": "cec4ec5b64a951547498b912f9ddf80d",
+    "semantic_hash": "cec4ec5b64a951547498b912f9ddf80d"
+  },
+  "branding/calamares/07.png": {
+    "mtime": 1793753025.8028145,
+    "seen": 1795026120.9409997,
+    "ast_hash": "79d78ca369401676ed1635c4d041af76",
+    "semantic_hash": "79d78ca369401676ed1635c4d041af76"
+  },
+  "branding/calamares/08.png": {
+    "mtime": 1793753025.8028145,
+    "seen": 1795026120.9410017,
+    "ast_hash": "0574dfa29705a6614ab35b9cb6565a9d",
+    "semantic_hash": "0574dfa29705a6614ab35b9cb6565a9d"
+  },
+  "branding/calamares/09.png": {
+    "mtime": 1793753025.820446,
+    "seen": 1795026120.9410038,
+    "ast_hash": "80844775536645e2d4ca278e8b86598c",
+    "semantic_hash": "80844775536645e2d4ca278e8b86598c"
+  },
+  "branding/calamares/icon.png": {
+    "mtime": 1793753025.824476,
+    "seen": 1795026120.9410057,
+    "ast_hash": "8f155dcbe6bfed1abd48d6d2e401abfe",
+    "semantic_hash": "8f155dcbe6bfed1abd48d6d2e401abfe"
+  },
+  "branding/calamares/logo.png": {
+    "mtime": 1793753025.824476,
+    "seen": 1795026120.9410076,
+    "ast_hash": "3058fcd0125091a8ac0a64897d6948d3",
+    "semantic_hash": "3058fcd0125091a8ac0a64897d6948d3"
+  },
+  "branding/calamares/welcome-oem.png": {
+    "mtime": 1793753025.8344765,
+    "seen": 1795026120.9410098,
+    "ast_hash": "f0b2ac88338cc42dbae346ea5210c4f5",
+    "semantic_hash": "f0b2ac88338cc42dbae346ea5210c4f5"
+  },
+  "branding/calamares/welcome.png": {
+    "mtime": 1793753025.8601332,
+    "seen": 1795026120.9410117,
+    "ast_hash": "c4c47af5cdbcf30997a8faa3daff6a62",
+    "semantic_hash": "c4c47af5cdbcf30997a8faa3daff6a62"
+  },
+  "branding/logos/logo-invertida-sem-fundo.svg": {
+    "mtime": 1793753025.862146,
+    "seen": 1795026120.9410138,
+    "ast_hash": "877df1d482c344034d7cee6334c773eb",
+    "semantic_hash": "877df1d482c344034d7cee6334c773eb"
+  },
+  "branding/logos/logo-monocromatica-sem-fundo.svg": {
+    "mtime": 1793753025.862146,
+    "seen": 1795026120.9410155,
+    "ast_hash": "5c000fd76042f3a719a1b860a036cfd0",
+    "semantic_hash": "5c000fd76042f3a719a1b860a036cfd0"
+  },
+  "branding/logos/logo.png": {
+    "mtime": 1793753025.8641596,
+    "seen": 1795026120.9410176,
+    "ast_hash": "3058fcd0125091a8ac0a64897d6948d3",
+    "semantic_hash": "3058fcd0125091a8ac0a64897d6948d3"
+  },
+  "branding/logos/logo_invertida.png": {
+    "mtime": 1793753025.8661711,
+    "seen": 1795026120.9410195,
+    "ast_hash": "720b6a37b0c6b25c2fa24b1c1a359823",
+    "semantic_hash": "720b6a37b0c6b25c2fa24b1c1a359823"
+  },
+  "branding/logos/logo_monocromatica.png": {
+    "mtime": 1793753025.8661711,
+    "seen": 1795026120.9410217,
+    "ast_hash": "8f155dcbe6bfed1abd48d6d2e401abfe",
+    "semantic_hash": "8f155dcbe6bfed1abd48d6d2e401abfe"
+  },
+  "branding/system/Lithos.png": {
+    "mtime": 1793753025.8661711,
+    "seen": 1795026120.9410236,
+    "ast_hash": "3058fcd0125091a8ac0a64897d6948d3",
+    "semantic_hash": "3058fcd0125091a8ac0a64897d6948d3"
+  },
+  "branding/system/oslogo.svg": {
+    "mtime": 1793753025.870281,
+    "seen": 1795026120.9410255,
+    "ast_hash": "dc536a9e7826ac574a2bee45397c0e19",
+    "semantic_hash": "dc536a9e7826ac574a2bee45397c0e19"
+  }
+}

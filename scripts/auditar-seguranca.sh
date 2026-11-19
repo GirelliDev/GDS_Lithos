@@ -13,7 +13,7 @@ falhar() { erro "auditoria de segurança: $*"; }
 modo() { stat -c %a "$rootfs$1"; }
 dono() { stat -c %u:%g "$rootfs$1"; }
 
-for diretorio in /etc/cpm /etc/cpm/keyrings /etc/cpm/repos.d; do
+for diretorio in /etc/gpm /etc/gpm/keyrings /etc/gpm/repos.d; do
     [[ -d "$rootfs$diretorio" && ! -L "$rootfs$diretorio" ]] ||
         falhar "diretório da trust store ausente, inválido ou symlink: $diretorio"
     [[ "$(modo "$diretorio")" == 755 ]] ||
@@ -22,7 +22,7 @@ done
 
 # A chave oficial ainda não é obrigatória. Porém, qualquer PEM provisionado
 # passa imediatamente a fazer parte da trust store e precisa ser protegido.
-for chave in "$rootfs/etc/cpm/keyrings/"*.pem; do
+for chave in "$rootfs/etc/gpm/keyrings/"*.pem; do
     [[ -e "$chave" || -L "$chave" ]] || continue
     caminho="${chave#"$rootfs"}"
     [[ -f "$chave" && ! -L "$chave" ]] ||
@@ -36,8 +36,8 @@ for chave in "$rootfs/etc/cpm/keyrings/"*.pem; do
         falhar "chave pública não pode ser gravável por grupo/outros: $caminho"
 done
 
-for arquivo in /etc/passwd /etc/group /etc/shadow /etc/sudoers /etc/cpm/repos.d/Lithos.repo \
-    /usr/bin/cpm /usr/bin/sudo /bin/su; do
+for arquivo in /etc/passwd /etc/group /etc/shadow /etc/sudoers /etc/gpm/repos.d/Lithos.repo \
+    /usr/bin/gpm /usr/bin/sudo /bin/su; do
     [[ -e "$rootfs$arquivo" && ! -L "$rootfs$arquivo" ]] || falhar "arquivo crítico ausente ou symlink: $arquivo"
     [[ "${2:-}" != --installed ]] || [[ "$(dono "$arquivo")" == 0:0 ]] || falhar "ownership crítico deve ser root:root: $arquivo"
 done
@@ -46,13 +46,13 @@ done
 [[ "$(modo /etc/shadow)" == 600 ]] || falhar "shadow deve ser 0600"
 [[ "$(modo /etc/sudoers)" == 440 ]] || falhar "sudoers deve ser 0440"
 [[ "$(modo /tmp)" == 1777 ]] || falhar "/tmp deve ser 1777"
-[[ "$(modo /usr/bin/cpm)" == 755 ]] || falhar "cpm deve ser 0755"
-[[ "$(modo /etc/cpm/repos.d/Lithos.repo)" == 644 ]] || falhar "configuração CPM deve ser 0644"
+[[ "$(modo /usr/bin/gpm)" == 755 ]] || falhar "gpm deve ser 0755"
+[[ "$(modo /etc/gpm/repos.d/Lithos.repo)" == 644 ]] || falhar "configuração GPM deve ser 0644"
 grep -Eq '^root:x:0:0:' "$rootfs/etc/passwd" || falhar "entrada root inválida em passwd"
 grep -Eq '^girelli:x:1000:100:' "$rootfs/etc/passwd" || falhar "entrada girelli inválida em passwd"
 grep -Eq '^wheel:x:10:girelli$' "$rootfs/etc/group" || falhar "grupo wheel inválido"
 grep -Eq '^[[:space:]]*SigLevel[[:space:]]*=[[:space:]]*Required[[:space:]]*$' \
-    "$rootfs/etc/cpm/repos.d/Lithos.repo" || falhar "repositório oficial não exige assinatura"
+    "$rootfs/etc/gpm/repos.d/Lithos.repo" || falhar "repositório oficial não exige assinatura"
 
 mapfile -d '' suid < <(find "$rootfs" -xdev -type f -perm /6000 -print0 | sort -z)
 esperados=("$rootfs/bin/su" "$rootfs/usr/bin/sudo")

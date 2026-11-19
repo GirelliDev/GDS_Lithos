@@ -13,11 +13,11 @@ assert args[args.index('--proto-redir') + 1] == '=https'
 url = next(x for x in args if x.startswith('https://'))
 path = urllib.parse.urlsplit(url).path.lstrip('/')
 assert '..' not in pathlib.PurePosixPath(path).parts
-source = pathlib.Path(os.environ['CPM_TEST_SERVER']) / path
+source = pathlib.Path(os.environ['GPM_TEST_SERVER']) / path
 output = pathlib.Path(args[args.index('--output') + 1])
-if os.environ.get('CPM_TEST_DELAY'):
-    pathlib.Path(os.environ['CPM_TEST_MARKER']).touch()
-    time.sleep(float(os.environ['CPM_TEST_DELAY']))
+if os.environ.get('GPM_TEST_DELAY'):
+    pathlib.Path(os.environ['GPM_TEST_MARKER']).touch()
+    time.sleep(float(os.environ['GPM_TEST_DELAY']))
 if source.is_file():
     output.write_bytes(source.read_bytes())
     if '--write-out' in args:

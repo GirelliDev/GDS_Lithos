@@ -1,4 +1,4 @@
-# Entrega e validação CPM v0.2
+# Entrega e validação GPM v0.2
 
 ## Hardening da fundação em 05/10/2026
 
@@ -6,7 +6,7 @@ A cadeia de confiança deixou o bootstrap Optional: o repositório oficial agora
 usa `SigLevel=Required`. Índices e pacotes são autenticados antes de serem
 interpretados/instalados por assinatura destacada RSA-PSS/SHA-256 via OpenSSL
 3.5.4. A chave pública é específica por repositório em
-`/etc/cpm/keyrings/<repo>.pem`; arquivo ausente, symlink, owner não-root, modo
+`/etc/gpm/keyrings/<repo>.pem`; arquivo ausente, symlink, owner não-root, modo
 gravável por grupo/outros, assinatura ausente/inválida, chave errada e falha de
 rede abortam. Optional continua disponível somente como decisão explícita do
 administrador e não ignora assinatura presente inválida.
@@ -20,9 +20,9 @@ Required deve falhar fechado até esse provisionamento.
 
 O rootfs passou a incluir somente a CLI estática `openssl` necessária à
 verificação. `scripts/auditar-seguranca.sh` formaliza o gate de SUID/SGID,
-capabilities, world-writable, `/tmp`, contas, shadow, sudoers, CPM e modos
+capabilities, world-writable, `/tmp`, contas, shadow, sudoers, GPM e modos
 críticos. A construção normaliza shadow 0600, sudoers 0440, passwd/group e repo
-CPM 0644. As únicas entradas SUID aceitas são `/bin/su` e `/usr/bin/sudo`.
+GPM 0644. As únicas entradas SUID aceitas são `/bin/su` e `/usr/bin/sudo`.
 
 O ambiente comum fixa `LC_ALL=C`, `TZ=UTC`, umask 022 e
 `SOURCE_DATE_EPOCH` (0 por padrão). Os principais tar/cpio/gzip passaram a usar
@@ -33,7 +33,7 @@ Isto prova esse artefato nesse checkout/host, não reprodução bit a bit univer
 
 Resultados executados nesta rodada:
 
-- `scripts/testar-cpm.sh`: 76 verificações aprovadas, incluindo assinatura
+- `scripts/testar-gpm.sh`: 76 verificações aprovadas, incluindo assinatura
   válida, ausente, adulterada, chave errada e pacote/índice adulterados;
 - `scripts/rootfs.sh`: 400 ELF x86_64, 109 executáveis dinâmicos, dependências
   internas e auditoria de segurança aprovada;
@@ -60,28 +60,28 @@ Não houve commit, push, escrita no archive ou remoção de QCOW2 existente.
 ## 1. Auditoria inicial
 
 Antes de editar foram lidos integralmente `documentacao/base-abi-v1.md`,
-`documentacao/validacao-base-abi-v1.md`, `sistema/usr/bin/cpm`,
-`sistema/etc/cpm/repos.d/Lithos.repo`, `scripts/rootfs.sh` e
+`documentacao/validacao-base-abi-v1.md`, `sistema/usr/bin/gpm`,
+`sistema/etc/gpm/repos.d/Lithos.repo`, `scripts/rootfs.sh` e
 `scripts/biblioteca.sh`; executado `git status --short`. O worktree já continha
 alterações extensas da Base ABI e outras alterações locais. Foram preservadas.
-CPM antiga era v0.1, usava repos.conf e rejeitava índice vazio. Cópia anterior
-preservada em `compilacao/cpm/cpm-v0.1-antes-da-implementacao`.
+GPM antiga era v0.1, usava repos.conf e rejeitava índice vazio. Cópia anterior
+preservada em `compilacao/gpm/gpm-v0.1-antes-da-implementacao`.
 
 ## 2. Arquivos desta implementação
 
 Alterados nesta missão: `.gitignore` (exceções limitadas para o código C próprio),
-`scripts/rootfs.sh` (compilação/instalação do helper, modo executável CPM, keyring,
-normalização de diretórios), `sistema/usr/bin/cpm` (v0.2) e
-`sistema/etc/cpm/repos.d/Lithos.repo` (bootstrap Optional).
+`scripts/rootfs.sh` (compilação/instalação do helper, modo executável GPM, keyring,
+normalização de diretórios), `sistema/usr/bin/gpm` (v0.2) e
+`sistema/etc/gpm/repos.d/Lithos.repo` (bootstrap Optional).
 
-Criados: `fontes/cpm/arquivo.c`, `scripts/compilar-cpm.sh`,
-`scripts/testar-cpm.sh`, `testes/cpm/testar.py`, doubles
-`testes/cpm/mock-{curl.py,id.sh,stat.sh,mv.sh}`, `testes/cpm/preparar-vm.py`,
-`testes/cpm/verificar-vm.sh`, `documentacao/cpm.md` e este relatório.
+Criados: `fontes/gpm/arquivo.c`, `scripts/compilar-gpm.sh`,
+`scripts/testar-gpm.sh`, `testes/gpm/testar.py`, doubles
+`testes/gpm/mock-{curl.py,id.sh,stat.sh,mv.sh}`, `testes/gpm/preparar-vm.py`,
+`testes/gpm/verificar-vm.sh`, `documentacao/gpm.md` e este relatório.
 Não foram alterados init, DHCP, configuração/receitas da ABI ou manifesto ABI
 nesta missão; seus diffs já existiam. A normalização de diretórios foi necessária:
 a primeira VM comprovou que o checkout com umask 0002 gerava `/`, `/usr`, `/var`
-em 775; a CPM corretamente recusou esses ancestrais. O pipeline agora remove
+em 775; a GPM corretamente recusou esses ancestrais. O pipeline agora remove
 escrita de grupo/outros em diretórios, preserva modos restritivos e restaura /tmp
 1777. Nenhum runtime do Ubuntu foi copiado.
 
@@ -103,14 +103,14 @@ mantém índices anteriores em falhas, inclusive rollback de publicação múlti
 
 Optional temporário: 404 em `.sig` permite objeto não assinado com aviso;
 assinatura presente e outros erros falham. Required falha fechado, sem verificador
-e chave operacional. `/etc/cpm/keyrings/` existe; nenhuma chave privada, TOFU,
+e chave operacional. `/etc/gpm/keyrings/` existe; nenhuma chave privada, TOFU,
 confiança automática ou alegação de assinatura verificada. Procedimento e
-pré-requisitos para Required em `cpm.md`.
+pré-requisitos para Required em `gpm.md`.
 
 ## 6. Banco local
 
 repos/<repo>/index, db/installed/<pacote>/{desc,files}, db/ownership em
-/var/lib/cpm. Downloads/staging somente em /var/cache/cpm/packages. Desc inclui
+/var/lib/gpm. Downloads/staging somente em /var/cache/gpm/packages. Desc inclui
 hash do pacote e da lista; files registra tipo/caminho/dispositivo/inode.
 List independe de configuração e rede.
 
@@ -152,9 +152,9 @@ binário de build e foi corretamente recusada; o gerador agora fixa modo 755.
 
 ## 12. Testes negativos e qualidade
 
-`./scripts/testar-cpm.sh`: **74 verificações aprovadas**, helper compilado com
-`-Wall -Wextra -Werror`. Evidência `compilacao/logs/cpm-unitarios.log`, área
-preservada `compilacao/cpm-testes.hyd73i0p`.
+`./scripts/testar-gpm.sh`: **74 verificações aprovadas**, helper compilado com
+`-Wall -Wextra -Werror`. Evidência `compilacao/logs/gpm-unitarios.log`, área
+preservada `compilacao/gpm-testes.hyd73i0p`.
 
 Cobertos: índice vazio/válido, campos incorretos, arquitetura, release, basename,
 NUL; pacote inexistente; SHA incorreto; archive truncado; manifesto ausente ou
@@ -165,7 +165,7 @@ operações não-root; concorrência; rollback e recuperação install/remove;
 falha na publicação do segundo índice restaura ambos. Snapshots comprovam ausência
 de alteração de banco/payload nos casos negativos.
 
-Executados com sucesso: `sh -n` no CPM e testes shell; `bash -n` nos três scripts
+Executados com sucesso: `sh -n` no GPM e testes shell; `bash -n` nos três scripts
 Bash alterados/criados; `git diff --check`; `scripts/testar-auditoria-abi.sh`
 (rejeição de loaders/RPATH/dependências/runtime adulterados);
 `scripts/testar-base-abi.sh` (inputs de C/C++ exclusivos do target).
@@ -173,9 +173,9 @@ Bash alterados/criados; `git diff --check`; `scripts/testar-auditoria-abi.sh`
 ## 13. Archive real
 
 Endpoint oficial consultado somente para leitura. Index HTTP 200, **zero bytes**;
-index.sig HTTP 404. Na VM instalada, `sudo cpm update` terminou com sucesso e
-aviso Optional; `cpm search fastfetch`, `cpm search teste` e `cpm list` retornaram
-sucesso sem ocorrências. `wc -c /var/lib/cpm/repos/Lithos/index` confirmou zero.
+index.sig HTTP 404. Na VM instalada, `sudo gpm update` terminou com sucesso e
+aviso Optional; `gpm search fastfetch`, `gpm search teste` e `gpm list` retornaram
+sucesso sem ocorrências. `wc -c /var/lib/gpm/repos/Lithos/index` confirmou zero.
 Não foram publicados pacotes nem chaves no servidor.
 
 ## 14. VM e pipeline
@@ -183,10 +183,10 @@ Não foram publicados pacotes nem chaves no servidor.
 Reconstruído por `scripts/preparar-instalador.sh`, incluindo rootfs, helper,
 auditoria ELF, initramfs, GRUB EFI e instalador oficiais.
 Host deps previamente disponíveis em compilacao/abi-host-deps via PATH/PERL5LIB,
-sem instalar dependências globais. Log: `compilacao/logs/cpm-instalador.log`.
+sem instalar dependências globais. Log: `compilacao/logs/gpm-instalador.log`.
 
 VM final QEMU/KVM, OVMF, 2 vCPU, 2 GiB, QCOW2 novo 40 GiB:
-`maquinas/testes/cpm-v0.2-final.O7Yqak/`. Instalação real terminou
+`maquinas/testes/gpm-v0.2-final.O7Yqak/`. Instalação real terminou
 `Lithos_INSTALACAO_OK`. CLI instalada tem SHA-256
 `797000576665ace73cd290eca2e49ce68fd61a0d92c826e4e01adc2e06e2f3e9`,
 idêntico ao código fonte shell final.
@@ -199,7 +199,7 @@ Evidências nesse diretório:
 - `reboot-offline.serial.log`: novo boot/login sem NIC, consultas offline, poweroff;
 - `emergency.serial.log`: seleção GRUB, ambiente independente e poweroff.
 
-`testes/cpm/verificar-vm.sh` terminou `CPM_VM_INSTALACAO_REMOCAO_OK`: pacote
+`testes/gpm/verificar-vm.sh` terminou `GPM_VM_INSTALACAO_REMOCAO_OK`: pacote
 C++ instalado numa raiz descartável isolada, listado, consultado, executado com
 libstdc++/libgcc/glibc Lithos e removido, deixando ownership vazio e sem registro.
 Esse transporte é um double local explícito, não teste HTTPS real. HTTPS real foi
@@ -216,12 +216,12 @@ integral; C NSS/DNS/signal/pthread/dlopen/libm; C++ exception/unwind/thread.
 `Lithos_BASE_ABI_V1_SISTEMA_OK` no guest.
 
 Reboot e shutdown limpos, **Falhas: 0**; novo boot sem NIC com
-`CPM_OFFLINE_OK`. Emergency Shell root, sem montar raiz instalada e sem loader
-glibc do sistema, terminou `CPM_EMERGENCY_INDEPENDENTE_OK`.
+`GPM_OFFLINE_OK`. Emergency Shell root, sem montar raiz instalada e sem loader
+glibc do sistema, terminou `GPM_EMERGENCY_INDEPENDENTE_OK`.
 UUID confirmado em instalação, sistema e Emergency:
 `434f5245-4c41-4253-9f01-000000000001`.
 Auditoria final: 399 ELF x86_64, 109 executáveis dinâmicos, dependências internas;
-14 módulos gconv com ORIGIN local permitido. Acréscimo CPM: um helper dinâmico.
+14 módulos gconv com ORIGIN local permitido. Acréscimo GPM: um helper dinâmico.
 
 ## 16. Limitações
 
@@ -259,13 +259,13 @@ arquivos alterados nesta missão, enumerados no item 2):
  M sistema/usr/lib/Lithos/rede/dhcp
 ?? .vscode/
 ?? documentacao/base-abi-v1.md
-?? documentacao/cpm.md
+?? documentacao/gpm.md
 ?? documentacao/validacao-base-abi-v1.md
-?? documentacao/validacao-cpm-v0.2.md
-?? fontes/cpm/
+?? documentacao/validacao-gpm-v0.2.md
+?? fontes/gpm/
 ?? scripts/auditar-elf.sh
 ?? scripts/compilar-base-abi.sh
-?? scripts/compilar-cpm.sh
+?? scripts/compilar-gpm.sh
 ?? scripts/compilar-curl.sh
 ?? scripts/compilar-openssl.sh
 ?? scripts/compilar-sudo.sh
@@ -273,14 +273,14 @@ arquivos alterados nesta missão, enumerados no item 2):
 ?? scripts/preparar-emergencia.sh
 ?? scripts/testar-auditoria-abi.sh
 ?? scripts/testar-base-abi.sh
-?? scripts/testar-cpm.sh
+?? scripts/testar-gpm.sh
 ?? sistema-emergencia/
-?? sistema/etc/cpm/
+?? sistema/etc/gpm/
 ?? sistema/etc/ld.so.conf
 ?? sistema/etc/nsswitch.conf
 ?? sistema/etc/sudoers
 ?? sistema/root/
-?? sistema/usr/bin/cpm
+?? sistema/usr/bin/gpm
 ?? testes/base-abi/
-?? testes/cpm/
+?? testes/gpm/
 ```

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <unistd.h>
@@ -277,6 +278,23 @@ int main(void)
 
             perror("accept4");
             break;
+        }
+
+        /*
+         * O socket aceita qualquer usuário local (0666). Sem limite,
+         * um cliente que não envia pedido trava o daemon para todos.
+         */
+        struct timeval limite = {.tv_sec = 5};
+
+        if (setsockopt(
+                cliente,
+                SOL_SOCKET,
+                SO_RCVTIMEO,
+                &limite,
+                sizeof(limite)) == -1) {
+            perror("setsockopt SO_RCVTIMEO");
+            close(cliente);
+            continue;
         }
 
         char pedido[TAMANHO_PEDIDO] = {0};

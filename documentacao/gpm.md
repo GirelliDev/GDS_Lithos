@@ -1,13 +1,13 @@
 # Lithos Package Manager 0.2
 
-A CPM usa a Lithos Base ABI v1, x86_64. O frontend é POSIX sh e o auxiliar
-`/usr/libexec/cpm/arquivo` é C, compilado pela toolchain Lithos, ligado à glibc
+A GPM usa a Lithos Base ABI v1, x86_64. O frontend é POSIX sh e o auxiliar
+`/usr/libexec/gpm/arquivo` é C, compilado pela toolchain Lithos, ligado à glibc
 do próprio sistema. Não instala runtime do host nem requer Python no alvo.
 
 ## Comandos
 
-`cpm --help`, `cpm --version`, `cpm update`, `cpm search <termo>`,
-`cpm info <nome>`, `cpm list`, `cpm install <nome>` e `cpm remove <nome>`.
+`gpm --help`, `gpm --version`, `gpm update`, `gpm search <termo>`,
+`gpm info <nome>`, `gpm list`, `gpm install <nome>` e `gpm remove <nome>`.
 Update/install/remove exigem root. Search pesquisa nome e descrição sem distinguir
 maiúsculas; info identifica candidato exato e informa a versão instalada
 separadamente. List lê somente o banco instalado e funciona offline. Índice vazio
@@ -15,7 +15,7 @@ separadamente. List lê somente o banco instalado e funciona offline. Índice va
 
 ## Configuração e autenticidade
 
-São lidos `/etc/cpm/repos.d/*.repo`, com seções INI e chaves Server, Enabled e
+São lidos `/etc/gpm/repos.d/*.repo`, com seções INI e chaves Server, Enabled e
 SigLevel. Há suporte a espaços ao redor de `=`, comentários e múltiplas seções.
 Não há execução de configuração/eval. Enabled=yes/no, identificadores duplicados
 e chaves desconhecidas são validados. Repositório desabilitado é ignorado.
@@ -24,18 +24,18 @@ Servidores devem ser HTTPS, sem credenciais, query ou construções de shell.
 
 ```ini
 [Lithos]
-Server = https://archive.corelabs.dev.br/cpm/v1/$arch
+Server = https://lithos.girelli.dev.br/gpm/v1/$arch
 Enabled = yes
 SigLevel = Required
 ```
 
 Cada repositório usa a chave pública PEM
-`/etc/cpm/keyrings/<identificador>.pem`. Ela deve ser arquivo regular de root,
+`/etc/gpm/keyrings/<identificador>.pem`. Ela deve ser arquivo regular de root,
 com modo no máximo 0644. A chave não é baixada pelo próprio repositório, não há
 TOFU e uma chave ausente, incorreta ou insegura aborta a operação.
 
 `<objeto>.sig` é uma assinatura destacada RSA-PSS/SHA-256 dos bytes exatos do
-objeto, com salt de 32 bytes. O CPM baixa o objeto e a assinatura para staging,
+objeto, com salt de 32 bytes. O GPM baixa o objeto e a assinatura para staging,
 verifica com OpenSSL 3.5.4 e somente então interpreta o índice ou confere o
 SHA-256 do pacote. Assinatura ausente ou inválida sob Required aborta sem publicar
 estado. Optional só aceita ausência quando o servidor responde 404 e emite aviso;
@@ -54,22 +54,24 @@ openssl pkeyutl -sign -inkey /cofre/release-private.pem -rawin -digest sha256 \
   -in index -out index.sig
 ```
 
-O mesmo procedimento assina cada `.cpm`. Publique o objeto e seu `.sig`; provisione
+O mesmo procedimento assina cada `.gpm`. Publique o objeto e seu `.sig`; provisione
 previamente apenas a chave pública correspondente como `Lithos.pem` por canal
 confiável da imagem/release. A chave oficial ainda não está disponível neste
 repositório: por isso o cliente oficial Required falha fechado até a etapa externa.
 
 ## Índice, banco e cache
 
-Endpoint: `https://archive.corelabs.dev.br/cpm/v1/x86_64/index`.
-Cada linha não vazia contém exatamente sete campos:
+Endpoint: `https://lithos.girelli.dev.br/gpm/v1/x86_64/index`.
+Cada linha não vazia contém exatamente nove campos:
 
 ```text
-nome|versao|release|arquitetura|arquivo.cpm|sha256|descricao
+nome|versao|release|arquitetura|arquivo.gpm|sha256|depends|conflicts|descricao
 ```
 
-Nome/versão, release inteiro positivo, arquitetura x86_64, basename seguro,
-SHA-256 hexadecimal minúsculo e descrição sem controles são verificados. Não há
+`depends` e `conflicts` são listas de nomes separadas por vírgula, sem versão,
+podendo ficar vazias. Nome/versão, release inteiro positivo, arquitetura x86_64,
+basename seguro, SHA-256 hexadecimal minúsculo, listas e descrição sem controles
+são verificados. Não há
 caminhos de download arbitrários. Índices limitados a 8 MiB; NUL é recusado.
 Todos os downloads/validações precedem publicação. Cada índice é publicado por
 rename atômico, sem truncar o anterior. Uma falha de download/validação preserva
@@ -79,12 +81,12 @@ leitores concorrentes nem recuperação de update interrompido por SIGKILL/queda
 
 Estado:
 
-- `/var/lib/cpm/repos/<repo>/index`: índices locais;
-- `/var/lib/cpm/db/installed/<nome>/desc`: metadados e hashes;
-- `/var/lib/cpm/db/installed/<nome>/files`: tipo, caminho, dispositivo e inode;
-- `/var/lib/cpm/db/ownership`: `/caminho/absoluto|pacote`;
-- `/var/lib/cpm/transactions/`: journals e snapshots privados;
-- `/var/cache/cpm/packages/`: downloads SHA-qualified e staging temporário.
+- `/var/lib/gpm/repos/<repo>/index`: índices locais;
+- `/var/lib/gpm/db/installed/<nome>/desc`: metadados e hashes;
+- `/var/lib/gpm/db/installed/<nome>/files`: tipo, caminho, dispositivo e inode;
+- `/var/lib/gpm/db/ownership`: `/caminho/absoluto|pacote`;
+- `/var/lib/gpm/transactions/`: journals e snapshots privados;
+- `/var/cache/gpm/packages/`: downloads SHA-qualified e staging temporário.
 
 Arquivos novos não substituem arquivos unmanaged nem de outros pacotes.
 Diretórios existentes podem ser compartilhados, sem mudança de modo ou ownership.
@@ -92,7 +94,7 @@ Somente diretórios novos efetivamente criados são atribuídos ao pacote.
 
 ## Pacotes
 
-Tar ustar comprimido com gzip, xz ou bzip2, contendo `CPM/MANIFEST` regular e
+Tar ustar comprimido com gzip, xz ou bzip2, contendo `GPM/MANIFEST` regular e
 `payload/...`. Exemplo mínimo:
 
 ```text
@@ -107,13 +109,31 @@ Conflicts=
 Replaces=
 ```
 
-Os quatro campos obrigatórios devem corresponder ao índice, não ao nome do arquivo.
-Metadados desconhecidos/duplicados são recusados. Depends/Conflicts/Replaces não
-vazios são rejeitados: não há solver. Provides é metadado, não resolução.
+Nome, versão, release, arquitetura, Depends e Conflicts devem corresponder ao
+índice, não ao nome do arquivo. Metadados desconhecidos/duplicados são recusados.
+Replaces não vazio é rejeitado. Provides é metadado, não resolução.
+
+### Dependências e conflitos
+
+`gpm install <nome>` monta o plano antes de baixar qualquer coisa: resolve as
+dependências recursivamente pelo índice e instala na ordem em que as dependências
+vêm primeiro. Dependências já instaladas são ignoradas. Se alguma dependência não
+existir ou tiver mais de um candidato, nada é alterado.
+
+Conflitos são verificados nos dois sentidos, entre pacotes do plano e pacotes
+instalados. Um conflito aborta a instalação antes de qualquer download.
+
+`gpm remove <nome>` recusa remover um pacote que outro instalado declara em
+Depends. Não há upgrade nem versão nas dependências: a v0.2 aceita só o nome.
+
+Cada transação é independente. Se uma dependência falhar no meio do plano,
+as anteriores já instaladas permanecem instaladas e a falha é reportada.
+Ciclos de dependência são tolerados com uma ordem arbitrária entre os pacotes
+do ciclo; quem publica o índice deve evitá-los.
 
 ```sh
-tar --format=ustar -czf exemplo.cpm -C staging CPM/MANIFEST payload
-sha256sum exemplo.cpm
+tar --format=ustar -czf exemplo.gpm -C staging GPM/MANIFEST payload
+sha256sum exemplo.gpm
 ```
 
 O auxiliar inspeciona o tar completo antes da extração em staging. Rejeita caminho
@@ -146,7 +166,7 @@ retira ownership/registro e então elimina backups. Diretórios próprios soment
 são removidos vazios. Registros maliciosos não podem atingir `/`, `/bin`, `/sbin`,
 `/lib`, `/lib64`, `/usr`, `/usr/bin`, `/usr/sbin`, `/usr/lib`, `/etc`, `/var`,
 `/home`, `/root`, `/boot`, `/dev`, `/proc`, `/sys` ou `/run`.
-Áreas de estado CPM/boot/kernel/users e arquivos essenciais/runtime listados no
+Áreas de estado GPM/boot/kernel/users e arquivos essenciais/runtime listados no
 manifesto Base ABI também são protegidos. Falha de rollback por inode alterado
 preserva o journal e bloqueia novas mutações, em vez de remover arquivo estranho.
 
@@ -154,7 +174,7 @@ Há fsync de journals/diretórios e sync do estado. Isto é rollback razoável, 
 garantia de atomicidade completa contra perda de energia: uma interrupção no
 intervalo entre criação de diretório/temporário e journal pode deixar um diretório
 vazio/arquivo oculto. Não há upgrades, dependências automáticas, hooks ou reparo
-automático de corrupção. CPM_ROOT/CPM_ARCHIVER destinam-se a raízes isoladas/testes;
+automático de corrupção. GPM_ROOT/GPM_ARCHIVER destinam-se a raízes isoladas/testes;
 não dispensam checagens de proprietário, root, ancestral ou archive.
 
 ## Dependências auditadas e testes
@@ -165,9 +185,9 @@ todos do userspace existente (Coreutils/util-linux/BusyBox), mais curl e openssl
 Base ABI. Não requer tar externo para extrair pacotes. O pipeline compila e audita
 o helper ELF; a normalização de diretórios no rootfs evita herdar umask do checkout.
 
-`scripts/testar-cpm.sh` executa fixtures negativas descartáveis com Python **somente
-no host** e helper nativo separado, nunca instalado. `testes/cpm/preparar-vm.py`
-gera fixture ABI para `testes/cpm/verificar-vm.sh`, que roda no sistema alvo sem
+`scripts/testar-gpm.sh` executa fixtures negativas descartáveis com Python **somente
+no host** e helper nativo separado, nunca instalado. `testes/gpm/preparar-vm.py`
+gera fixture ABI para `testes/gpm/verificar-vm.sh`, que roda no sistema alvo sem
 Python. Esse teste usa transporte local explicitamente simulado; o teste do
 archive oficial usa curl HTTPS real, separadamente. Evidências e entrega em
-[validacao-cpm-v0.2.md](validacao-cpm-v0.2.md).
+[validacao-gpm-v0.2.md](validacao-gpm-v0.2.md).

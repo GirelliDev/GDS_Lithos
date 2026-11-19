@@ -166,5 +166,5 @@ link para biblioteca externa e runtime adulterado.
 
 Esta base não declara aprovação das suítes completas de GCC/glibc/Binutils nem
 reprodutibilidade bit a bit entre hosts. Ela fixa sources/receitas e controla os
-inputs da ABI. Pacotes CPM futuros x86_64 devem usar esta toolchain/sysroot e
-passar pela auditoria; nenhuma função do CPM é adicionada nesta tarefa.
+inputs da ABI. Pacotes GPM futuros x86_64 devem usar esta toolchain/sysroot e
+passar pela auditoria; nenhuma função do GPM é adicionada nesta tarefa.

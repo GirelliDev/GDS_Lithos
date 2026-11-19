@@ -62,11 +62,11 @@ echo "Configure a senha inicial do usuário girelli:"
 chroot /alvo /bin/busybox passwd -a sha512 girelli ||
     falha "não foi possível configurar a senha de girelli"
 
-# su autentica a senha da conta de destino. Reutilizar o hash recém-criado
-# habilita root sem reter, registrar ou solicitar novamente a senha em claro.
-awk -F: '$1 == "girelli" { print "root:" $2 }' /alvo/etc/shadow |
-    chroot /alvo /bin/busybox chpasswd -e ||
-    falha "não foi possível habilitar a autenticação de root"
+# root tem senha própria: a do girelli não é reutilizada.
+echo
+echo "Configure a senha do usuário root (separada da de girelli):"
+chroot /alvo /bin/busybox passwd -a sha512 root ||
+    falha "não foi possível configurar a senha de root"
 
 mkdir -p /alvo/boot/efi /alvo/proc /alvo/sys /alvo/dev /alvo/run /alvo/tmp
 chmod 1777 /alvo/tmp

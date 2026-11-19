@@ -25,7 +25,7 @@ typedef struct {
 static Entry entries[LIMIT];
 static size_t count;
 static void fail(const char *s) {
-  fprintf(stderr, "[CPM archive] %s (%s)\n", s, strerror(errno));
+  fprintf(stderr, "[GPM archive] %s (%s)\n", s, strerror(errno));
   exit(1);
 }
 static int safe(const char *s) {
@@ -62,7 +62,7 @@ static int protected(const char *p) {
 static int reserved(const char *p) {
   const char *trees[] = {"/boot",    "/dev",         "/proc",          "/sys",
                          "/run",     "/tmp",         "/home",          "/root",
-                         "/etc/cpm", "/var/lib/cpm", "/var/cache/cpm", NULL};
+                         "/etc/gpm", "/var/lib/gpm", "/var/cache/gpm", NULL};
   const char *files[] = {"/init",
                          "/bin/busybox",
                          "/bin/ash",
@@ -71,8 +71,8 @@ static int reserved(const char *p) {
                          "/bin/su",
                          "/usr/bin/sudo",
                          "/usr/bin/curl",
-                         "/usr/bin/cpm",
-                         "/usr/libexec/cpm/arquivo",
+                         "/usr/bin/gpm",
+                         "/usr/libexec/gpm/arquivo",
                          "/etc/passwd",
                          "/etc/group",
                          "/etc/shadow",
@@ -258,10 +258,10 @@ static void unpack(const char *tar, const char *stage) {
     unsigned long size = octal(h + 124, 12), mode = octal(h + 100, 8);
     if (mode & 07000 || (type != '2' && (mode & 0022)))
       fail("modo privilegiado/gravável não aceito");
-    if (!strcmp(path, "CPM") || !strcmp(path, "payload")) {
+    if (!strcmp(path, "GPM") || !strcmp(path, "payload")) {
       if (type != '5' || size)
         fail("container inválido");
-    } else if (!strcmp(path, "CPM/MANIFEST")) {
+    } else if (!strcmp(path, "GPM/MANIFEST")) {
       if ((type != '0' && type) || !size || size > 65536 || manifest++)
         fail("MANIFEST inválido/duplicado");
     } else if (strncmp(path, "payload/", 8))
@@ -551,7 +551,7 @@ static void apply(const char *rootpath, const char *stage, const char *files,
       continue;
     }
     char temp[80], backup[PATHMAX];
-    snprintf(temp, sizeof(temp), ".cpm-%ld-%zu", (long)getpid(), i);
+    snprintf(temp, sizeof(temp), ".gpm-%ld-%zu", (long)getpid(), i);
     const char *last = strrchr(e->path, '/');
     size_t prefix = (size_t)(last - e->path);
     if (snprintf(backup, sizeof(backup), "%.*s/%s", (int)prefix, e->path,
@@ -648,7 +648,7 @@ static void finish(const char *rootpath, const char *log, int finalize) {
       const char *a = strrchr(p, '/'), *b = strrchr(backup, '/');
       if (*backup != '/' || !safe(backup + 1) || !b ||
           (a - p) != (b - backup) || strncmp(p, backup, (size_t)(a - p)) ||
-          strncmp(b + 1, ".cpm-", 5))
+          strncmp(b + 1, ".gpm-", 5))
         fail("journal backup inseguro");
     } else if (strcmp(backup, "-"))
       fail("journal diretório inválido");
@@ -724,7 +724,7 @@ int main(int argc, char **argv) {
     finish(argv[2], argv[3], !strcmp(argv[1], "finalize"));
   else {
     fprintf(stderr,
-            "CPM archive v0.2: unpack/check/install/remove/undo/finalize\n");
+            "GPM archive v0.2: unpack/check/install/remove/undo/finalize\n");
     return 2;
   }
   return 0;

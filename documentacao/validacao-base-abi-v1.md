@@ -16,9 +16,9 @@ O pipeline existente fixa sources por SHA-256, usa diretórios de build em
 `compilacao`, logs e cache por configuração. Essas convenções foram mantidas.
 
 O worktree já estava modificado: configuração, instalação/UEFI, rede, suporte
-a sudo/curl/OpenSSL, Emergency Shell e arquivos CPM. Não houve reset, commit,
-push ou reversão de alterações locais. A alteração local de CPM observada
-durante o build foi preservada, sem implementação funcional de CPM nesta tarefa.
+a sudo/curl/OpenSSL, Emergency Shell e arquivos GPM. Não houve reset, commit,
+push ou reversão de alterações locais. A alteração local de GPM observada
+durante o build foi preservada, sem implementação funcional de GPM nesta tarefa.
 
 GNU awk e Texinfo ausentes no host foram obtidos por extração de pacotes dentro
 de `compilacao/abi-host-deps`, sem instalação global ou sudo do host.
@@ -198,11 +198,11 @@ Snapshot de `git status --short`, incluindo alterações pré-existentes preserv
 ?? scripts/testar-auditoria-abi.sh
 ?? scripts/testar-base-abi.sh
 ?? sistema-emergencia/
-?? sistema/etc/cpm/
+?? sistema/etc/gpm/
 ?? sistema/etc/ld.so.conf
 ?? sistema/etc/nsswitch.conf
 ?? sistema/etc/sudoers
 ?? sistema/root/
-?? sistema/usr/bin/cpm
+?? sistema/usr/bin/gpm
 ?? testes/base-abi/
 ```

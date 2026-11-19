@@ -28,14 +28,14 @@ if [[ "${Lithos_SECURITY_OWNERSHIP_TESTED:-}" != 1 ]]; then
 
     # No modo de build, um PEM seguro pode pertencer ao usuário do checkout.
     # A mesma visão de ownership precisa falhar explicitamente em --installed.
-    printf '%s\n' 'fixture-public-key' > "$ownership_area/rootfs/etc/cpm/keyrings/build-user.pem"
-    chmod 0644 "$ownership_area/rootfs/etc/cpm/keyrings/build-user.pem"
+    printf '%s\n' 'fixture-public-key' > "$ownership_area/rootfs/etc/gpm/keyrings/build-user.pem"
+    chmod 0644 "$ownership_area/rootfs/etc/gpm/keyrings/build-user.pem"
     if ! fakeroot -- sh -ec '
         chown -R 0:0 "$1"
-        chown 1:1 "$1/etc/cpm/keyrings/build-user.pem"
+        chown 1:1 "$1/etc/gpm/keyrings/build-user.pem"
         "$2" "$1" >"$3" 2>&1
         if "$2" "$1" --installed >"$4" 2>&1; then exit 90; fi
-        grep -Fq "ownership da chave pública deve ser root:root: /etc/cpm/keyrings/build-user.pem" "$4"
+        grep -Fq "ownership da chave pública deve ser root:root: /etc/gpm/keyrings/build-user.pem" "$4"
     ' sh "$ownership_area/rootfs" "$RAIZ/scripts/auditar-seguranca.sh" \
         "$ownership_area/pem-build-user-normal.log" \
         "$ownership_area/pem-build-user-installed.log"; then
@@ -76,18 +76,18 @@ chmod 4755 "$area/rootfs/usr/bin/suid-inesperado"
 rejeitar suid-inesperado
 rm -- "$area/rootfs/usr/bin/suid-inesperado"
 
-chmod 0777 "$area/rootfs/etc/cpm"
+chmod 0777 "$area/rootfs/etc/gpm"
 rejeitar diretorio-world-writable
-chmod 0755 "$area/rootfs/etc/cpm"
+chmod 0755 "$area/rootfs/etc/gpm"
 
-chmod 0775 "$area/rootfs/etc/cpm/keyrings"
-rejeitar keyrings-group-writable 'diretório da trust store deve ser 0755: /etc/cpm/keyrings'
-chmod 0755 "$area/rootfs/etc/cpm/keyrings"
+chmod 0775 "$area/rootfs/etc/gpm/keyrings"
+rejeitar keyrings-group-writable 'diretório da trust store deve ser 0755: /etc/gpm/keyrings'
+chmod 0755 "$area/rootfs/etc/gpm/keyrings"
 
-printf '%s\n' 'fixture-public-key' > "$area/rootfs/etc/cpm/keyrings/group-writable.pem"
-chmod 0664 "$area/rootfs/etc/cpm/keyrings/group-writable.pem"
-rejeitar pem-group-writable 'chave pública não pode ser gravável por grupo/outros: /etc/cpm/keyrings/group-writable.pem'
-rm -- "$area/rootfs/etc/cpm/keyrings/group-writable.pem"
+printf '%s\n' 'fixture-public-key' > "$area/rootfs/etc/gpm/keyrings/group-writable.pem"
+chmod 0664 "$area/rootfs/etc/gpm/keyrings/group-writable.pem"
+rejeitar pem-group-writable 'chave pública não pode ser gravável por grupo/outros: /etc/gpm/keyrings/group-writable.pem'
+rm -- "$area/rootfs/etc/gpm/keyrings/group-writable.pem"
 
 capability_status=EXECUTADA
 if ! command -v setcap >/dev/null 2>&1; then
