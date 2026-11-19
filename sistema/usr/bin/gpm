@@ -325,19 +325,24 @@ plano() {
     [ -z "$conflito" ] || erro "conflito: $conflito"
 }
 instalar_linha() {
-    linha=$1
+    linha=$1 arquivo_local=${2:-}
     IFS='|' read -r repo name version release arch file hash depends conflicts description <<EOF
 $linha
 EOF
-    [ ! -e "$DB/$name" ] && [ ! -L "$DB/$name" ] || erro 'pacote já instalado; upgrades não são suportados na v0.2'
+    [ ! -e "$DB/$name" ] && [ ! -L "$DB/$name" ] || erro 'pacote já instalado'
     cfg=$(repos) || erro 'configuração inválida'
     source=$(printf '%s\n' "$cfg" | awk -F'|' -v r="$repo" '$1==r {print $2 "|" $3}')
     IFS='|' read -r server policy <<EOF
 $source
 EOF
     transacao "$name" install
-    baixar "${server%/}/packages/$file" "$STAGE/package.gpm"
-    assinatura "$policy" "$repo" "${server%/}/packages/$file" "$STAGE/package.gpm" "$STAGE/package.sig"
+    if [ -n "$arquivo_local" ]; then
+        # Rollback: reinstala do cache. O SHA-256 abaixo ainda confere o conteúdo.
+        cp "$arquivo_local" "$STAGE/package.gpm"
+    else
+        baixar "${server%/}/packages/$file" "$STAGE/package.gpm"
+        assinatura "$policy" "$repo" "${server%/}/packages/$file" "$STAGE/package.gpm" "$STAGE/package.sig"
+    fi
     printf '%s  %s\n' "$hash" "$STAGE/package.gpm" | sha256sum --check --status || erro 'SHA-256 do pacote incorreto'
     [ ! -L "$CACHE/$hash-$file" ] || erro 'cache é symlink'
     mv "$STAGE/package.gpm" "$CACHE/$hash-$file"
@@ -360,8 +365,8 @@ EOF
     mkdir "$TX/record"
     awk -F'|' 'NR>1 {print $1 "|" $2 "|" $3 "|" $4}' "$TX/journal" > "$TX/record/files"
     fhash=$(sha256sum "$TX/record/files"); fhash=${fhash%% *}
-    printf 'Name = %s\nVersion = %s\nRelease = %s\nArchitecture = x86_64\nRepository = %s\nDepends = %s\nConflicts = %s\nDescription = %s\nPackageSHA256 = %s\nFilesSHA256 = %s\n' \
-        "$name" "$version" "$release" "$repo" "$depends" "$conflicts" "$description" "$hash" "$fhash" > "$TX/record/desc"
+    printf 'Name = %s\nVersion = %s\nRelease = %s\nArchitecture = x86_64\nRepository = %s\nFile = %s\nDepends = %s\nConflicts = %s\nDescription = %s\nPackageSHA256 = %s\nFilesSHA256 = %s\n' \
+        "$name" "$version" "$release" "$repo" "$file" "$depends" "$conflicts" "$description" "$hash" "$fhash" > "$TX/record/desc"
     cat "$OWN" > "$TX/ownership.after"
     awk -F'|' -v pkg="$name" '{print $2 "|" pkg}' "$TX/record/files" >> "$TX/ownership.after"
     chmod 644 "$TX/record/files" "$TX/record/desc" "$TX/ownership.after"
